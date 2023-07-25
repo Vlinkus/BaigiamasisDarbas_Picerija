@@ -2,11 +2,14 @@ package lt.academy.javau5.pizza.entities;
 
 import java.util.List;
 
+
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,12 +28,13 @@ public class Pizza {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	
 	@Column(name="pizzaName")
 	private String pizzaName;
 		
-	//Place holder for photo file type in sql. name atm.
+	
 	@Column(name="pizzaPhoto")
-	private String pizzaPhoto;
+	private byte[] pizzaPhoto;
 	
 	@Column(name="pizzaPrice")
 	private double pizzaPrice;
