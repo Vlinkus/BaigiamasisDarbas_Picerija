@@ -1,6 +1,8 @@
 package lt.academy.javau5.pizza.controllers;
 
+
 import java.io.IOException;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +50,6 @@ public class PizzaController {
 			return thePizza;
 		}
 		
-		
-		
 		//Add pizza
 		@PostMapping("/pizza")
 		public Pizza addPizza(@RequestBody Pizza thePizza) {
@@ -93,8 +93,6 @@ public class PizzaController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Įvyko klaida įkeliant nuotrauką.");
 	        }
 	    }
-		
-		
 		
 		
 }

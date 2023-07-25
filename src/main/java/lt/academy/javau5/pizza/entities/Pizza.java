@@ -33,7 +33,8 @@ public class Pizza {
 	private String pizzaName;
 		
 	
-	@Column(name="pizzaPhoto")
+	@Column(name="pizzaPhoto", length=1048576)
+	
 	private byte[] pizzaPhoto;
 	
 	@Column(name="pizzaPrice")
