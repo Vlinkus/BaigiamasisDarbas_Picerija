@@ -28,7 +28,7 @@ public class PizzaController {
 		}
 		
 		//Shows all pizzas
-		@GetMapping
+		@GetMapping("/pizza")
 		public List<Pizza> findAll(){
 			return pizzaService.findAll();
 		}
