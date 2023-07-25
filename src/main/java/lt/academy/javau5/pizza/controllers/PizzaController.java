@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lt.academy.javau5.pizza.entities.Pizza;
@@ -47,6 +48,7 @@ public class PizzaController {
 		
 		//Add pizza
 		@PostMapping("/pizza")
+		
 		public Pizza addPizza(@RequestBody Pizza thePizza) {
 			thePizza.setId(0);
 			Pizza dbPizza=pizzaService.save(thePizza);
