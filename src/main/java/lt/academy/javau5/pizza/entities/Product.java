@@ -28,7 +28,8 @@ public class Product {
 	@Column(name="product_name")
 	private String productName;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinColumn(name="pizza_id")
 	private Pizza pizza;
 	

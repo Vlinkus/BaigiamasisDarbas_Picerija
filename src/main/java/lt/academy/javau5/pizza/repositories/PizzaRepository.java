@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import lt.academy.javau5.pizza.entities.Pizza;
 
-
+@Repository
 public interface PizzaRepository extends JpaRepository<Pizza,Integer> {
 
 }
