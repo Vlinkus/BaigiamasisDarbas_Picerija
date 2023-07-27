@@ -55,10 +55,12 @@ public class ProductController {
 	@DeleteMapping("/product/{productId}")
 	public String deleteProduct(@PathVariable int productId) {
 		Product tempProduct = productService.findById(productId);
-		if (tempProduct == null) {
-			throw new RuntimeException("Produktas su nr: " +productId + " nerasta");
+		if (tempProduct != null) {
+			productService.delete(tempProduct);
+
+		} else {
+			throw new RuntimeException("Produktas su nr: " + productId + " nerasta");
 		}
-		productService.deleteById(productId);
 		return "Produktas su nr: " + productId + " ištrinta";
 	}
 
@@ -66,7 +68,7 @@ public class ProductController {
 
 	@PutMapping("/product")
 	public Product updateProduct(@RequestBody Product theProduct) {
-		Product dbProduct =productService.save(theProduct);
+		Product dbProduct = productService.save(theProduct);
 		return dbProduct;
 	}
 
