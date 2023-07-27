@@ -4,13 +4,11 @@ package lt.academy.javau5.pizza.services;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-
 import lt.academy.javau5.pizza.entities.Pizza;
+import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.PizzaRepository;
 
 @Service
@@ -43,10 +41,13 @@ public class PizzaService {
 		return pizzaRepository.save(thePizza);
 	}
 
-	public void deleteById(int pizzaId) {
-		pizzaRepository.deleteById(pizzaId);
+	public void deleteById(Pizza pizzaId) {
+		pizzaRepository.delete(pizzaId);
+	//	pizzaRepository.deleteById(pizzaId);
 
 	}
+	
+	
 
 	public void uploadPizzaPhoto(int pizzaId, byte[] photoBytes) {
 		Pizza pizza = pizzaRepository.findById(pizzaId).orElse(null);
