@@ -1,8 +1,13 @@
 package lt.academy.javau5.pizza.entities;
 
-import jakarta.persistence.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,9 +33,10 @@ public class Product {
 	@Column(name="product_name")
 	private String productName;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH})
-	@JoinColumn(name="pizza_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pizza_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
 	private Pizza pizza;
 	
 	

@@ -3,8 +3,12 @@ package lt.academy.javau5.pizza.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,29 +20,54 @@ import lt.academy.javau5.pizza.services.ProductService;
 @RequestMapping("/api")
 public class ProductController {
 
-	private ProductService productService ;
-	
+	private ProductService productService;
+
 	@Autowired
 	public ProductController(ProductService theProductService) {
-		productService=theProductService;
+		productService = theProductService;
 	}
-	
-	
-	//Show all products
+
+	// Show all products
 	@GetMapping("/products")
-	public List<Product> findAll(){
+	public List<Product> findAll() {
 		return productService.findAll();
 	}
-	
-	//Show product by ID
+
+	// Show product by ID
 	@GetMapping("/product/{productId}")
 	public Product getproduct(@PathVariable int productId) {
 		Product theProduct = productService.findById(productId);
-		if(theProduct==null) {throw new RuntimeException("Produktas su nr: "+productId+" nerastas");
-			}
+		if (theProduct == null) {
+			throw new RuntimeException("Produktas su nr: " + productId + " nerastas");
+		}
 		return theProduct;
 	}
-	
-	
-	
+
+	// Add product
+	@PostMapping("/product")
+	public Product addProduct(@RequestBody Product theProduct) {
+		theProduct.setId(0);
+		Product dbProduct = productService.save(theProduct);
+		return dbProduct;
+	}
+
+	// Delete product
+	@DeleteMapping("/product/{productId}")
+	public String deleteProduct(@PathVariable int productId) {
+		Product tempProduct = productService.findById(productId);
+		if (tempProduct == null) {
+			throw new RuntimeException("Produktas su nr: " +productId + " nerasta");
+		}
+		productService.deleteById(productId);
+		return "Produktas su nr: " + productId + " ištrinta";
+	}
+
+	// Update product
+
+	@PutMapping("/product")
+	public Product updateProduct(@RequestBody Product theProduct) {
+		Product dbProduct =productService.save(theProduct);
+		return dbProduct;
+	}
+
 }

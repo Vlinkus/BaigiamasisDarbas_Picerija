@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.ProductRepository;
 
@@ -37,6 +37,19 @@ public class ProductService {
 		}
 		return theProduct;
 	}
+	
+	public Product save(Product theProduct) {
+		return productRepository.save(theProduct);
+	}
+	
+	public void deleteById(int productId) {
+		productRepository.deleteById(productId);
+
+	}
+	
+	
+
+
 	
 	
 
