@@ -12,13 +12,14 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 @Service
 public class ProductService {
-
+	
+	@Autowired
 	private ProductRepository productRepository;
 
-	@Autowired
-	public ProductService(ProductRepository theProductRepository) {
-		productRepository = theProductRepository;
-	}
+	
+//	public ProductService(ProductRepository theProductRepository) {
+//		productRepository = theProductRepository;
+//	}
 	
 	
 	public List<Product> findAll() {
