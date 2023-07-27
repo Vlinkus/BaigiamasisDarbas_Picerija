@@ -13,13 +13,14 @@ import lt.academy.javau5.pizza.repositories.PizzaRepository;
 
 @Service
 public class PizzaService {
-
+	
+	@Autowired
 	private PizzaRepository pizzaRepository;
 
-	@Autowired
-	public PizzaService(PizzaRepository thePizzaRepository) {
-		pizzaRepository = thePizzaRepository;
-	}
+	
+//	public PizzaService(PizzaRepository thePizzaRepository) {
+//		pizzaRepository = thePizzaRepository;
+//	}
 
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
@@ -41,10 +42,8 @@ public class PizzaService {
 		return pizzaRepository.save(thePizza);
 	}
 
-	public void deleteById(Pizza pizzaId) {
-		pizzaRepository.delete(pizzaId);
-	//	pizzaRepository.deleteById(pizzaId);
-
+	public void deletePizza(Pizza pizza) {
+		pizzaRepository.delete(pizza);
 	}
 	
 	

@@ -62,7 +62,7 @@ public class PizzaController {
 	public String deletePizza(@PathVariable int pizzaId) {
 		Pizza tempPizza = pizzaService.findById(pizzaId);
 		if (tempPizza != null) {
-			pizzaService.deleteById(tempPizza);
+			pizzaService.deletePizza(tempPizza);
 
 		} else {
 			throw new RuntimeException("Pica su nr: " + pizzaId + " nerasta");
