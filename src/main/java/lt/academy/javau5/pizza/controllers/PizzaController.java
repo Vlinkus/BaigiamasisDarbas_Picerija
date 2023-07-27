@@ -100,8 +100,8 @@ public class PizzaController {
 
 	@GetMapping("/dummyPizza")
 	public void addDummy() {
-		Pizza p = new Pizza(10, "Pica testui", null, 10, 20, null);
-		Product prod = new Product(1, "Suris", p);
+		Pizza p = new Pizza(20, "TESTAVIMAS", null, 10, 20, null);
+		Product prod = new Product(4, "Pomidorai", p);
 		List<Product> testProd = new ArrayList<>();
 		testProd.add(prod);
 		p.setProducts(testProd);
