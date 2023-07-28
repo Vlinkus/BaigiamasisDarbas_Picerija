@@ -3,6 +3,11 @@ package lt.academy.javau5.pizza.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lt.academy.javau5.pizza.entities.Pizza;
-import lt.academy.javau5.pizza.entities.Product;
+
 import lt.academy.javau5.pizza.services.PizzaService;
-import lt.academy.javau5.pizza.services.ProductService;
+
 
 @RestController
 @RequestMapping("/api")
@@ -99,6 +104,22 @@ public class PizzaController {
 		}
 	}
 
+//	@GetMapping("/pizza/{pizzaId}/photo")
+//    public ResponseEntity<byte[]> getPizzaPhotoById(@PathVariable int pizzaId) {
+//        Pizza pizza = pizzaService.findById(pizzaId);
+//        if (pizza == null || pizza.getPizzaPhoto() == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.IMAGE_JPEG); 
+//            headers.setContentLength(pizza.getPizzaPhoto().length);
+//            return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
+//        }
+//    }
+	
+	
+	
+	
 //	@GetMapping("/dummyPizza")
 //	public void addDummy() {
 //		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);

@@ -44,9 +44,9 @@ public class Pizza {
 	@Column(name="pizzaSize")
 	private int pizzaSize;
 	
-	@OneToMany(mappedBy = "pizza", fetch=FetchType.LAZY, cascade= {CascadeType.PERSIST,CascadeType.MERGE,
+	@OneToMany(mappedBy = "pizza", fetch=FetchType.EAGER, cascade= {CascadeType.PERSIST,CascadeType.MERGE,
 			CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonIgnore
+   
     private List<Product> products;
 
 	
