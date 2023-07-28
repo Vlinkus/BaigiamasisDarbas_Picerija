@@ -71,5 +71,11 @@ public class ProductController {
 		Product dbProduct = productService.save(theProduct);
 		return dbProduct;
 	}
+	
+	@GetMapping("/dummyProduct")
+	public void addProductDummies() {
+		productService.seedProductRepository();
+		
+	}
 
 }
