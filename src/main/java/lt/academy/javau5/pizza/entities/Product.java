@@ -39,7 +39,13 @@ public class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
 	private Pizza pizza;
+
+	public Product(String productName, Pizza pizza) {
+		
+		this.productName = productName;
+		this.pizza = pizza;
+	}
 	
-	
+	// To do price
 
 }

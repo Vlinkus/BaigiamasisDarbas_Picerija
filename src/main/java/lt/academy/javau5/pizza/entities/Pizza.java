@@ -49,6 +49,18 @@ public class Pizza {
     @JsonIgnore
     private List<Product> products;
 
+	
+	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize, List<Product> products) {
+		
+		this.pizzaName = pizzaName;
+		this.pizzaPhoto = pizzaPhoto;
+		this.pizzaPrice = pizzaPrice;
+		this.pizzaSize = pizzaSize;
+		this.products = products;
+	}
+
+	
+	
 	//If needed
 	/*
 	@Column(name="isSpicy")
