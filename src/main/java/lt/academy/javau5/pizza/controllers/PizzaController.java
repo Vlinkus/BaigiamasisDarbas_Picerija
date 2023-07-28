@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.services.PizzaService;
+import lt.academy.javau5.pizza.services.ProductService;
 
 @RestController
 @RequestMapping("/api")
@@ -98,14 +99,20 @@ public class PizzaController {
 		}
 	}
 
+//	@GetMapping("/dummyPizza")
+//	public void addDummy() {
+//		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);
+//		Product prod = new Product("Agurkėliai", p);
+//		List<Product> testProd = new ArrayList<>();
+//		testProd.add(prod);
+//		p.setProducts(testProd);
+//		pizzaService.save(p);
+//	}
+	
 	@GetMapping("/dummyPizza")
-	public void addDummy() {
-		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);
-		Product prod = new Product("Agurkėliai", p);
-		List<Product> testProd = new ArrayList<>();
-		testProd.add(prod);
-		p.setProducts(testProd);
-		pizzaService.save(p);
+	public void addPizzaDummies() {
+		pizzaService.seedPizzaRepository();
+		
 	}
 
 }

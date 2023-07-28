@@ -36,7 +36,7 @@ public class ProductServiceTests {
 
 		// Arrange
 
-		Product product1 = new Product(1, "Agurkai", null);
+		Product product1 = new Product(1, "Agurkai",10, null );
 		List<Product> productListArr = Arrays.asList(product1);
 		when(productRepository.findAll()).thenReturn(productListArr);
 
@@ -57,7 +57,7 @@ public class ProductServiceTests {
 		// Arrange
 
 		int productId = 1;
-		Optional<Product> product1 = Optional.of(new Product(productId, "Agurkai", null));
+		Optional<Product> product1 = Optional.of(new Product(productId, "Agurkai",10, null));
 		when(productRepository.findById(productId)).thenReturn(product1);
 
 		// Act
@@ -75,7 +75,7 @@ public class ProductServiceTests {
 
 		// Arrange
 
-		Product product1 = new Product(1, "Agurkai", null);
+		Product product1 = new Product(1, "Agurkai",10, null);
 
 		// Act
 
@@ -91,7 +91,7 @@ public class ProductServiceTests {
 		
 		//Arrange
 				
-		Product product1 = new Product(1, "Agurkai", null);
+		Product product1 = new Product(1, "Agurkai",10, null);
 		
 		// Act
 		

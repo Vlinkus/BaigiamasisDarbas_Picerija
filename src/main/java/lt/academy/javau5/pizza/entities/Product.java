@@ -34,18 +34,23 @@ public class Product {
 	@Column(name="product_name")
 	private String productName;
 	
+	@Column(name="product_price")
+	private double productPrice;
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "pizza_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
 	private Pizza pizza;
 
-	public Product(String productName, Pizza pizza) {
+	public Product(String productName, Pizza pizza, double productPrice) {
 		
+		this.productPrice= productPrice;
 		this.productName = productName;
 		this.pizza = pizza;
 	}
 	
-	// To do price
+	
+	
 
 }
