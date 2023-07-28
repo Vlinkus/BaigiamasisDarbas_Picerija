@@ -82,7 +82,7 @@ public class PizzaController {
 	// Add pizza photo
 	@PostMapping("/pizza/{pizzaId}/uploadPhoto")
 	public ResponseEntity<String> uploadPizzaPhoto(@PathVariable int pizzaId,
-			@RequestParam("file") MultipartFile file) {
+			@RequestParam("pizzaPhoto") MultipartFile file) {
 		try {
 			if (!file.isEmpty()
 					&& (file.getContentType().equals("image/png") || file.getContentType().equals("image/jpeg"))) {
@@ -100,8 +100,8 @@ public class PizzaController {
 
 	@GetMapping("/dummyPizza")
 	public void addDummy() {
-		Pizza p = new Pizza(20, "TESTAVIMAS", null, 10, 20, null);
-		Product prod = new Product(4, "Pomidorai", p);
+		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);
+		Product prod = new Product("Agurkėliai", p);
 		List<Product> testProd = new ArrayList<>();
 		testProd.add(prod);
 		p.setProducts(testProd);
