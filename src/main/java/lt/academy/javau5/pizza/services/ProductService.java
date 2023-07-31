@@ -17,9 +17,9 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	
-//	public ProductService(ProductRepository theProductRepository) {
-//		productRepository = theProductRepository;
-//	}
+	public ProductService(ProductRepository theProductRepository) {
+		productRepository = theProductRepository;
+	}
 	
 	
 	public List<Product> findAll() {
@@ -66,6 +66,21 @@ public class ProductService {
 		}
 		return false;
 	}
+
+
+	public boolean productAlreadyExists(String productName) {
+		
+		List<Product> productList = productRepository.findAll();
+		return productList
+				.stream()
+				.anyMatch(product -> product
+						.getProductName()
+						.equals(productName));
+				
+	}
+
+
+	
 	
 	
 

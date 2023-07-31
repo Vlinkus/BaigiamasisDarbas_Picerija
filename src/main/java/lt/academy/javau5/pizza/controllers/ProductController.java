@@ -45,10 +45,18 @@ public class ProductController {
 
 	// Add product
 	@PostMapping("/product")
-	public Product addProduct(@RequestBody Product theProduct) {
+	public String addProduct(@RequestBody Product theProduct) {
+		
+		String productName= theProduct.getProductName();
+		
+		if(productService.productAlreadyExists(productName)) {
+			return "Toks produktas jau egzistuoja.";
+		}
+		
+		
 		theProduct.setId(0);
-		Product dbProduct = productService.save(theProduct);
-		return dbProduct;
+		productService.save(theProduct);
+		return "Produktas pridėtas";
 	}
 
 	// Delete product

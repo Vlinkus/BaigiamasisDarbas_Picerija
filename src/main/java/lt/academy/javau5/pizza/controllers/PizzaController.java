@@ -104,18 +104,20 @@ public class PizzaController {
 		}
 	}
 
-//	@GetMapping("/pizza/{pizzaId}/photo")
-//    public ResponseEntity<byte[]> getPizzaPhotoById(@PathVariable int pizzaId) {
-//        Pizza pizza = pizzaService.findById(pizzaId);
-//        if (pizza == null || pizza.getPizzaPhoto() == null) {
-//            return ResponseEntity.notFound().build();
-//        } else {
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.IMAGE_JPEG); 
-//            headers.setContentLength(pizza.getPizzaPhoto().length);
-//            return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
-//        }
-//    }
+	//If needed
+	
+	@GetMapping("/pizza/{pizzaId}/photo")
+    public ResponseEntity<byte[]> getPizzaPhotoById(@PathVariable int pizzaId) {
+        Pizza pizza = pizzaService.findById(pizzaId);
+        if (pizza == null || pizza.getPizzaPhoto() == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); 
+            headers.setContentLength(pizza.getPizzaPhoto().length);
+            return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
+        }
+    }
 	
 	
 	
