@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.transaction.Transactional;
 import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.services.ProductService;
@@ -46,30 +47,37 @@ public class ProductController {
 	// Add product
 	@PostMapping("/product")
 	public String addProduct(@RequestBody Product theProduct) {
-		
-		String productName= theProduct.getProductName();
-		
-		if(productService.productAlreadyExists(productName)) {
+		String tempProduct=theProduct.getProductName();
+		if (productService.productAlreadyExists(tempProduct)) {
 			return "Toks produktas jau egzistuoja.";
 		}
-		
-		
+
 		theProduct.setId(0);
 		productService.save(theProduct);
 		return "Produktas pridėtas";
 	}
 
 	// Delete product
+	@Transactional
 	@DeleteMapping("/product/{productId}")
 	public String deleteProduct(@PathVariable int productId) {
-		Product tempProduct = productService.findById(productId);
-		if (tempProduct != null) {
-			productService.delete(tempProduct);
 
+		Product tempProduct = productService.findById(productId);
+
+		if (tempProduct != null) {
+
+			List<Pizza> pizzas = tempProduct.getPizza();
+			if (pizzas != null) {
+				for (Pizza pizza : pizzas) {
+					pizza.getProducts().remove(tempProduct);
+				}
+			}
+			productService.delete(tempProduct);
+			return "Produktas su nr: " + productId + " ištrinta";
 		} else {
-			throw new RuntimeException("Produktas su nr: " + productId + " nerasta");
+			throw new RuntimeException("Produktas su nr: " + productId + " nerastas");
 		}
-		return "Produktas su nr: " + productId + " ištrinta";
+
 	}
 
 	// Update product
@@ -79,11 +87,11 @@ public class ProductController {
 		Product dbProduct = productService.save(theProduct);
 		return dbProduct;
 	}
-	
+
 	@GetMapping("/dummyProduct")
 	public void addProductDummies() {
 		productService.seedProductRepository();
-		
+
 	}
 
 }
