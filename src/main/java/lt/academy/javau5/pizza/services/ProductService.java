@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.ProductRepository;
 
@@ -17,9 +16,9 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	
-	public ProductService(ProductRepository theProductRepository) {
-		productRepository = theProductRepository;
-	}
+//	public ProductService(ProductRepository theProductRepository) {
+//		productRepository = theProductRepository;
+//	}
 	
 	
 	public List<Product> findAll() {
@@ -40,7 +39,14 @@ public class ProductService {
 	}
 	
 	public Product save(Product theProduct) {
-		return productRepository.save(theProduct);
+		List<Product> products = productRepository.findAll();
+		boolean productAlreadyExist = products.stream()
+												.anyMatch(p->(p.getProductName().equals(theProduct.getProductName())));
+		Product product = new Product();
+		if(productAlreadyExist)
+			product = productRepository.findProductByProductName(theProduct.getProductName());
+		else return productRepository.save(theProduct);
+		return product;
 	}
 	
 	public void delete(Product product) {

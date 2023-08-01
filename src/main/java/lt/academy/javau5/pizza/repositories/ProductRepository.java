@@ -7,5 +7,7 @@ import lt.academy.javau5.pizza.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+	
+	Product findProductByProductName(String productName);
 
 }

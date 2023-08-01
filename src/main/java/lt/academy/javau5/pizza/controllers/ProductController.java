@@ -49,10 +49,10 @@ public class ProductController {
 		
 		String productName= theProduct.getProductName();
 		
-		if(productService.productAlreadyExists(productName)) {
-			return "Toks produktas jau egzistuoja.";
-		}
-		
+//		if(productService.productAlreadyExists(productName)) {
+//			return "Toks produktas jau egzistuoja.";
+//		}
+//		
 		
 		theProduct.setId(0);
 		productService.save(theProduct);

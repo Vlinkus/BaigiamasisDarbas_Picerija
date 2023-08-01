@@ -60,22 +60,22 @@ public class PizzaService {
 	}
 	
 	
-	public boolean seedPizzaRepository() {
-		if (pizzaRepository.count()==0){
-			Pizza p1 = new Pizza("Pica1", null, 1, 10, null);
-			Pizza p2 = new Pizza("Pica2", null, 2, 20, null);
-			Pizza p3 = new Pizza("Pica3", null, 3, 30, null);
-			Pizza p4 = new Pizza("Pica4", null, 4, 40, null);
-			Pizza p5 = new Pizza("Pica5", null, 5, 50, null);
-			Pizza p6 = new Pizza("Pica6", null, 6, 60, null);
-			pizzaRepository.save(p1);
-			pizzaRepository.save(p2);
-			pizzaRepository.save(p3);
-			pizzaRepository.save(p4);
-			pizzaRepository.save(p5);
-			pizzaRepository.save(p6);
-		}
-		return false;
-	}
+//	public boolean seedPizzaRepository() {
+//		if (pizzaRepository.count()==0){
+//			Pizza p1 = new Pizza("Pica1", null, 1, 10, null);
+//			Pizza p2 = new Pizza("Pica2", null, 2, 20, null);
+//			Pizza p3 = new Pizza("Pica3", null, 3, 30, null);
+//			Pizza p4 = new Pizza("Pica4", null, 4, 40, null);
+//			Pizza p5 = new Pizza("Pica5", null, 5, 50, null);
+//			Pizza p6 = new Pizza("Pica6", null, 6, 60, null);
+//			pizzaRepository.save(p1);
+//			pizzaRepository.save(p2);
+//			pizzaRepository.save(p3);
+//			pizzaRepository.save(p4);
+//			pizzaRepository.save(p5);
+//			pizzaRepository.save(p6);
+//		}
+//		return false;
+//	}
 
 }

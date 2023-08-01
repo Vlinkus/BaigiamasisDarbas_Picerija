@@ -132,10 +132,10 @@ public class PizzaController {
 //		pizzaService.save(p);
 //	}
 	
-	@GetMapping("/dummyPizza")
-	public void addPizzaDummies() {
-		pizzaService.seedPizzaRepository();
-		
-	}
+//	@GetMapping("/dummyPizza")
+//	public void addPizzaDummies() {
+//		pizzaService.seedPizzaRepository();
+//		
+//	}
 
 }
