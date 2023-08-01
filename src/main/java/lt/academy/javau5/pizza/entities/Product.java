@@ -19,9 +19,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table (name = "products")
 public class Product {
@@ -37,16 +42,14 @@ public class Product {
 	@Column(name="product_price")
 	private double productPrice;
 	
-	@JoinTable(name = "product_pizza", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "pizza_id"))
-	@ManyToMany(fetch = FetchType.LAZY, cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//	@JoinTable(name = "product_pizza") //	, joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "pizza_id"))
+	@ManyToMany(fetch = FetchType.LAZY,
+	cascade= {CascadeType.PERSIST, 
+			CascadeType.MERGE},
+	mappedBy = "products") //	, CascadeType.DETACH, CascadeType.REFRESH}) 
     @JsonIgnore
 	private List<Pizza> pizzas;
 
-	
-	public Product () {}
-	
 		
 	public Product(String productName, double productPrice) {
 		

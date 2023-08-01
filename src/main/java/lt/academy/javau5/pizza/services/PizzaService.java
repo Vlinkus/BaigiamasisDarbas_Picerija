@@ -1,5 +1,6 @@
 package lt.academy.javau5.pizza.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +16,7 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 public class PizzaService {
 
 	@Autowired
-	private PizzaRepository pizzaRepository;
-	
+	private PizzaRepository pizzaRepository;	
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -41,6 +41,19 @@ public class PizzaService {
 	}
 
 	public Pizza save(Pizza thePizza) {
+		List<Product> products = productRepository.findAll();
+		List<Product> productsInPizza = new ArrayList<>();
+		thePizza.getProducts().stream()
+			.forEach(p -> {
+				Product productFromDB = products.stream()
+										        .filter(pro -> pro.getProductName().equals(p.getProductName()))
+										        .findFirst()
+										        .orElse(null);
+				if(productFromDB!= null)
+					productsInPizza.add(productFromDB);
+				else productsInPizza.add(productRepository.save(p));
+				});
+		thePizza.setProducts(productsInPizza);
 		return pizzaRepository.save(thePizza);
 	}
 

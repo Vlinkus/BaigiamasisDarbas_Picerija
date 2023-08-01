@@ -20,21 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lt.academy.javau5.pizza.entities.Pizza;
-import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.services.PizzaService;
-import lt.academy.javau5.pizza.services.ProductService;
 
 @RestController
 @RequestMapping("/api")
 public class PizzaController {
-
-	private PizzaService pizzaService;
-
 	@Autowired
-	public PizzaController(PizzaService thePizzaService) {
-		pizzaService = thePizzaService;
-	}
-
+	private PizzaService pizzaService;
+	
 	// Shows all pizzas
 	@GetMapping("/pizza")
 	public List<Pizza> findAll() {
@@ -54,26 +47,8 @@ public class PizzaController {
 	// Add pizza
 	@PostMapping("/pizza")
 	public String addPizza(@RequestBody Pizza thePizza) {
-
-		String tempPizzaName=thePizza.getPizzaName();
-		if (pizzaService.pizzaAlreadyExists(tempPizzaName)) {
-			return "Pica su tokiu pavadinimu jau yra";
-		} else {
-
-			Pizza tempPizza = new Pizza(thePizza.getPizzaName(), thePizza.getPizzaPhoto(), thePizza.getPizzaPrice(),
-					thePizza.getPizzaSize());
-
-			List<Product> tempProduct = thePizza.getProducts();
-
-			List<Product> newProducts = pizzaService.removeExistingProducts(tempProduct);
-
-			for (int i = 0; i < newProducts.size(); i++) {
-				tempPizza.addProduct(newProducts.get(i));
-			}
-
-			pizzaService.save(tempPizza);
-			return "Pica sukurta";
-		}
+			pizzaService.save(thePizza);
+			return "Pica sukurta";	
 	}
 
 	// Delete pizza

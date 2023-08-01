@@ -8,19 +8,14 @@ import org.springframework.stereotype.Service;
 
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.ProductRepository;
+import lt.academy.javau5.pizza.exceptions.ProductAlreadyExistException;
 
 @Service
 public class ProductService {
 	
 	@Autowired
-	private static ProductRepository productRepository;
+	private ProductRepository productRepository;
 
-	
-//	public ProductService(ProductRepository theProductRepository) {
-//		productRepository = theProductRepository;
-//	}
-	
-	
 	public List<Product> findAll() {
 			return productRepository.findAll();
 	}
@@ -38,20 +33,18 @@ public class ProductService {
 		return theProduct;
 	}
 	
-	public Product save(Product theProduct) {
+	public Product save(Product theProduct) throws Exception{
 		List<Product> products = productRepository.findAll();
 		boolean productAlreadyExist = products.stream()
 												.anyMatch(p->(p.getProductName().equals(theProduct.getProductName())));
 		Product product = new Product();
 		if(productAlreadyExist)
-			product = productRepository.findProductByProductName(theProduct.getProductName());
-		else return productRepository.save(theProduct);
-		return product;
+			throw new ProductAlreadyExistException("Toks produktas jau egzistuoja.");
+		return productRepository.save(theProduct);
 	}
-	
-	public void delete(Product product) {
+	public void delete(int productId) {
+		Product product = productRepository.findById(productId).orElseThrow();
 		productRepository.delete(product);
-
 	}
 
 

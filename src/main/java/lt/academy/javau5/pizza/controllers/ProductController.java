@@ -3,6 +3,8 @@ package lt.academy.javau5.pizza.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,21 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.transaction.Transactional;
-import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
+import lt.academy.javau5.pizza.exceptions.ProductAlreadyExistException;
 import lt.academy.javau5.pizza.services.ProductService;
 
 @RestController
 @RequestMapping("/api")
 public class ProductController {
-
-	private ProductService productService;
-
+	
 	@Autowired
-	public ProductController(ProductService theProductService) {
-		productService = theProductService;
-	}
-
+	private ProductService productService;
+	
 	// Show all products
 	@GetMapping("/products")
 	public List<Product> findAll() {
@@ -46,43 +44,29 @@ public class ProductController {
 
 	// Add product
 	@PostMapping("/product")
-	public String addProduct(@RequestBody Product theProduct) {
-		String tempProduct=theProduct.getProductName();
-		if (productService.productAlreadyExists(tempProduct)) {
-			return "Toks produktas jau egzistuoja.";
-		}
-		theProduct.setId(0);
-		productService.save(theProduct);
-		return "Produktas pridėtas";
+	public ResponseEntity<String> addProduct(@RequestBody Product product) {
+	    try {
+	        productService.save(product);
+	        return ResponseEntity.ok("Product added successfully.");
+	    } catch (ProductAlreadyExistException e) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
+	    }
 	}
 
 	// Delete product
 	@Transactional
 	@DeleteMapping("/product/{productId}")
 	public String deleteProduct(@PathVariable int productId) {
-
-		Product tempProduct = productService.findById(productId);
-
-		if (tempProduct != null) {
-
-			List<Pizza> pizzas = tempProduct.getPizza();
-			if (pizzas != null) {
-				for (Pizza pizza : pizzas) {
-					pizza.getProducts().remove(tempProduct);
-				}
-			}
-			productService.delete(tempProduct);
+			productService.delete(productId);
 			return "Produktas su nr: " + productId + " ištrinta";
-		} else {
-			throw new RuntimeException("Produktas su nr: " + productId + " nerastas");
-		}
-
 	}
 
 	// Update product
 
 	@PutMapping("/product")
-	public Product updateProduct(@RequestBody Product theProduct) {
+	public Product updateProduct(@RequestBody Product theProduct) throws Exception {
 		Product dbProduct = productService.save(theProduct);
 		return dbProduct;
 	}

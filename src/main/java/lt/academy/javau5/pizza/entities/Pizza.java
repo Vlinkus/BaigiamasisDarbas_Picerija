@@ -16,11 +16,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="pizza")
-
 public class Pizza {
 	
 	
@@ -43,102 +45,28 @@ public class Pizza {
 	@Column(name="pizzaSize")
 	private int pizzaSize;
 	
-	@JoinTable(name = "product_pizza", joinColumns = @JoinColumn(name = "pizza_id"),
-									   inverseJoinColumns = @JoinColumn(name = "product_id"))
-	
+	@JoinTable(name = "pizza_products", 
+				joinColumns = @JoinColumn(name = "pizza_id"),
+				inverseJoinColumns = @JoinColumn(name = "product_id"))
 	@ManyToMany(fetch=FetchType.LAZY,
 	cascade= {CascadeType.PERSIST,
-			CascadeType.MERGE,
-			CascadeType.DETACH,
-			CascadeType.REFRESH})
+			CascadeType.MERGE})//,CascadeType.DETACH,CascadeType.REFRESH})
 	private List<Product> products;
 
-	
-	public Pizza () {}
-	
-	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {
-		
+	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {		
 		this.pizzaName = pizzaName;
 		this.pizzaPhoto = pizzaPhoto;
 		this.pizzaPrice = pizzaPrice;
-		this.pizzaSize = pizzaSize;
-		
-	}
-	
-//		public Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {
-//		
-//		this.id=id;
-//		this.pizzaName = pizzaName;
-//		this.pizzaPhoto = pizzaPhoto;
-//		this.pizzaPrice = pizzaPrice;
-//		this.pizzaSize = pizzaSize;
-//		
-//	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getPizzaName() {
-		return pizzaName;
-	}
-
-	public void setPizzaName(String pizzaName) {
-		this.pizzaName = pizzaName;
-	}
-
-	public byte[] getPizzaPhoto() {
-		return pizzaPhoto;
-	}
-
-	public void setPizzaPhoto(byte[] pizzaPhoto) {
-		this.pizzaPhoto = pizzaPhoto;
-	}
-
-	public double getPizzaPrice() {
-		return pizzaPrice;
-	}
-
-	public void setPizzaPrice(double pizzaPrice) {
-		this.pizzaPrice = pizzaPrice;
-	}
-
-	public int getPizzaSize() {
-		return pizzaSize;
-	}
-
-	public void setPizzaSize(int pizzaSize) {
-		this.pizzaSize = pizzaSize;
-	}
-
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-
-	@Override
-	public String toString() {
-		return "Pizza [id=" + id + ", pizzaName=" + pizzaName + 
-				", pizzaPrice=" + pizzaPrice + ", pizzaSize=" + pizzaSize + ", products=" + products + "]";
+		this.pizzaSize = pizzaSize;	
 	}
 
 	public void addProduct(Product theProduct) {
 		if(products==null) {
-			products = new ArrayList<>();
-			
+			products = new ArrayList<>();	
 		}
 		products.add(theProduct);
 	}
-	
-	
-	
+
 	//If needed
 	/*
 	@Column(name="isSpicy")
