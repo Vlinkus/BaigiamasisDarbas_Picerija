@@ -13,7 +13,7 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 public class ProductService {
 	
 	@Autowired
-	private ProductRepository productRepository;
+	private static ProductRepository productRepository;
 
 	
 //	public ProductService(ProductRepository theProductRepository) {
@@ -57,12 +57,12 @@ public class ProductService {
 
 	public boolean seedProductRepository() {
 		if (productRepository.count()==0){
-			Product p1 = new Product("Produktas1", null, 1);
-			Product p2 = new Product("Produktas2", null, 2);
-			Product p3 = new Product("Produktas3", null, 3);
-			Product p4 = new Product("Produktas4", null, 4);
-			Product p5 = new Product("Produktas5", null, 5);
-			Product p6 = new Product("Produktas6", null, 6);
+			Product p1 = new Product("Produktas1", 1 );
+			Product p2 = new Product("Produktas2",  2);
+			Product p3 = new Product("Produktas3",  3);
+			Product p4 = new Product("Produktas4",  4);
+			Product p5 = new Product("Produktas5",  5);
+			Product p6 = new Product("Produktas6",  6);
 			productRepository.save(p1);
 			productRepository.save(p2);
 			productRepository.save(p3);
@@ -74,16 +74,16 @@ public class ProductService {
 	}
 
 
+	
+
+
 	public boolean productAlreadyExists(String productName) {
-		
+		 
 		List<Product> productList = productRepository.findAll();
-		return productList
-				.stream()
-				.anyMatch(product -> product
-						.getProductName()
-						.equals(productName));
-				
-	}
+		return productList.stream().anyMatch(product -> product.getProductName().equals(productName));
+	}	       
+	       
+	             
 
 
 	

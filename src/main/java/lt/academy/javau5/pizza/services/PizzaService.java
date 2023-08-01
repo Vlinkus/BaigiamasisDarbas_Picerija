@@ -1,7 +1,5 @@
 package lt.academy.javau5.pizza.services;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,17 +9,20 @@ import org.springframework.stereotype.Service;
 import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.PizzaRepository;
+import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 @Service
 public class PizzaService {
-	
+
 	@Autowired
 	private PizzaRepository pizzaRepository;
-
 	
-//	public PizzaService(PizzaRepository thePizzaRepository) {
-//		pizzaRepository = thePizzaRepository;
-//	}
+	@Autowired
+	private ProductRepository productRepository;
+
+	public PizzaService(PizzaRepository thePizzaRepository) {
+		pizzaRepository = thePizzaRepository;
+	}
 
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
@@ -46,8 +47,6 @@ public class PizzaService {
 	public void deletePizza(Pizza pizza) {
 		pizzaRepository.delete(pizza);
 	}
-	
-	
 
 	public void uploadPizzaPhoto(int pizzaId, byte[] photoBytes) {
 		Pizza pizza = pizzaRepository.findById(pizzaId).orElse(null);
@@ -58,7 +57,6 @@ public class PizzaService {
 			throw new RuntimeException("Pica su " + pizzaId + " nerasta.");
 		}
 	}
-	
 	
 //	public boolean seedPizzaRepository() {
 //		if (pizzaRepository.count()==0){
@@ -78,4 +76,29 @@ public class PizzaService {
 //		return false;
 //	}
 
+	public boolean pizzaAlreadyExists(String tempPizzaName) {
+		List<Pizza> pizzaList = pizzaRepository.findAll();
+		return pizzaList.stream().anyMatch(pizza -> pizza.getPizzaName().equals(tempPizzaName));
+	}
+
+	public List<Product> removeExistingProducts(List<Product> tempProduct) {
+		List<Product> products=productRepository.findAll();
+		
+		tempProduct.removeAll(products);
+		
+		return tempProduct;
+	}
+
+//	public List<Product> productAlreadyExists(List<Product> tempProduct) {
+//		
+//		
+//		List<Product> oldProducts = productRepository.findAll();
+//		if (tempProduct.equals(oldProducts)){
+//        	return true;
+//        }
+//        return false;
+//				
+//	}
+
+	
 }
