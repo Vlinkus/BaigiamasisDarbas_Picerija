@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lt.academy.javau5.pizza.entities.Pizza;
+import lt.academy.javau5.pizza.entities.PizzaResponseEntity;
+import lt.academy.javau5.pizza.exceptions.PizzaAlreadyExistException;
+import lt.academy.javau5.pizza.exceptions.PizzaDoesNotExistException;
 import lt.academy.javau5.pizza.services.PizzaService;
 
 @RestController
@@ -37,41 +40,36 @@ public class PizzaController {
 	// Shows pizza by ID
 	@GetMapping("/pizza/{pizzaId}")
 	public Pizza getPizza(@PathVariable int pizzaId) {
-		Pizza thePizza = pizzaService.findById(pizzaId);
-		if (thePizza == null) {
-			throw new RuntimeException("Pica su nr: " + pizzaId + " nerasta");
-		}
-		return thePizza;
+		return pizzaService.findById(pizzaId);
 	}
 
 	// Add pizza
 	@PostMapping("/pizza")
-	public String addPizza(@RequestBody Pizza thePizza) {
-			pizzaService.save(thePizza);
-			return "Pica sukurta";	
+	public PizzaResponseEntity addPizza(@RequestBody Pizza thePizza) {
+				Pizza pizza = pizzaService.save(thePizza);
+				if(pizza ==null)
+				return new PizzaResponseEntity(pizza,HttpStatus.BAD_REQUEST, "Saving Pizza Failed");
+				return new PizzaResponseEntity(pizza,HttpStatus.OK, "Pizza saved succesfully");
 	}
 
 	// Delete pizza
 	@DeleteMapping("/pizza/{pizzaId}")
-	public String deletePizza(@PathVariable int pizzaId) {
-		Pizza tempPizza = pizzaService.findById(pizzaId);
-		if (tempPizza != null) {
-			pizzaService.deletePizza(tempPizza);
-
-		} else {
-			throw new RuntimeException("Pica su nr: " + pizzaId + " nerasta");
-		}
-
-		return "Pica su nr: " + pizzaId + " ištrinta";
+	public ResponseEntity<String> deletePizza(@PathVariable int pizzaId) { 
+		 try {
+		        String msg = pizzaService.deletePizza(pizzaId);
+		        return ResponseEntity.ok(msg);
+		    } catch (PizzaDoesNotExistException e) {
+		        return ResponseEntity.badRequest().body(e.getMessage());
+		    }
 	}
 
 	// Update pizza
-
 	@PutMapping("/pizza")
-	public String updatePizza(@RequestBody Pizza thePizza) {
-
-		Pizza dbPizza = pizzaService.save(thePizza);
-		return "Pica atnaujinta";
+	public PizzaResponseEntity updatePizza(@RequestBody Pizza pizza) {
+		Pizza savePizza = pizzaService.update(pizza);
+		if(savePizza ==null)
+			return new PizzaResponseEntity(pizza,HttpStatus.BAD_REQUEST, "Saving Update Failed");
+			return new PizzaResponseEntity(pizza,HttpStatus.OK, "Pizza Updated Succesfully");
 	}
 
 	// Add pizza photo
@@ -80,7 +78,7 @@ public class PizzaController {
 			@RequestParam("pizzaPhoto") MultipartFile file) {
 		try {
 			if (!file.isEmpty()
-					&& (file.getContentType().equals("image/png") || file.getContentType().equals("image/jpeg"))) {
+					&& (file.getContentType().equals("image/jpg") || file.getContentType().equals("image/jpeg"))) {
 				byte[] photoBytes = file.getBytes();
 				pizzaService.uploadPizzaPhoto(pizzaId, photoBytes);
 				return ResponseEntity.ok("Nuotrauka sėkmingai įkelta!");
