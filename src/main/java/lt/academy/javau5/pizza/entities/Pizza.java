@@ -29,7 +29,7 @@ public class Pizza {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
-	private int id;
+	private Integer id;
 	
 	
 	@Column(name="pizzaName")
@@ -50,7 +50,7 @@ public class Pizza {
 				inverseJoinColumns = @JoinColumn(name = "product_id"))
 	@ManyToMany(fetch=FetchType.LAZY,
 	cascade= {CascadeType.PERSIST,
-			CascadeType.MERGE})//,CascadeType.DETACH,CascadeType.REFRESH})
+			CascadeType.MERGE})
 	private List<Product> products;
 
 	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {		

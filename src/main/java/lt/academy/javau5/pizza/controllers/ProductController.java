@@ -56,7 +56,6 @@ public class ProductController {
 	}
 
 	// Delete product
-	@Transactional
 	@DeleteMapping("/product/{productId}")
 	public String deleteProduct(@PathVariable int productId) {
 			productService.delete(productId);
@@ -64,11 +63,14 @@ public class ProductController {
 	}
 
 	// Update product
-
 	@PutMapping("/product")
-	public Product updateProduct(@RequestBody Product theProduct) throws Exception {
-		Product dbProduct = productService.save(theProduct);
-		return dbProduct;
+	public ResponseEntity<String> updateProduct(@RequestBody Product product) {
+		 try {
+		        productService.update(product);
+		        return ResponseEntity.ok("Product updated successfully.");
+		    } catch (Exception e) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
+		    }
 	}
 
 	@GetMapping("/dummyProduct")

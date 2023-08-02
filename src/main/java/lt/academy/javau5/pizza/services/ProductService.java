@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import lt.academy.javau5.pizza.entities.Product;
-import lt.academy.javau5.pizza.repositories.ProductRepository;
+import lt.academy.javau5.pizza.exceptions.PizzaDoesNotExistException;
 import lt.academy.javau5.pizza.exceptions.ProductAlreadyExistException;
+import lt.academy.javau5.pizza.exceptions.ProductDoesNotExistExecption;
+import lt.academy.javau5.pizza.exceptions.ProductIsStillUsedInSomePizzaException;
+import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 @Service
 public class ProductService {
@@ -17,34 +21,42 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	public List<Product> findAll() {
-			return productRepository.findAll();
+		List<Product> products = productRepository.findAll();
+			return products;
 	}
 
 
 	public Product findById(int productId) {
-		Optional<Product> result = productRepository.findById(productId);
-		;
-		Product theProduct = null;
-		if (result.isPresent()) {
-			theProduct = result.get();
-		} else {
-			throw new RuntimeException("Produktas su nr: " + productId + " nerastas");
-		}
-		return theProduct;
+		Product product = productRepository.findById(productId).orElseThrow(
+				() -> new ProductDoesNotExistExecption("Product with ID: " +productId + " does  not exist"));
+		return product;
 	}
 	
-	public Product save(Product theProduct) throws Exception{
-		List<Product> products = productRepository.findAll();
-		boolean productAlreadyExist = products.stream()
-												.anyMatch(p->(p.getProductName().equals(theProduct.getProductName())));
-		Product product = new Product();
-		if(productAlreadyExist)
-			throw new ProductAlreadyExistException("Toks produktas jau egzistuoja.");
+	public Product save(Product theProduct) throws ProductAlreadyExistException{
+		Product product = productRepository.findProductByProductName(theProduct.getProductName());
+		if(product != null)
+			throw new ProductAlreadyExistException("Product with this name already exist");
 		return productRepository.save(theProduct);
 	}
+	
+	public Product update(Product product) {
+		Product updatedProduct = null;
+		if(product != null && product.getId() !=null) {
+			updatedProduct = productRepository.save(product);
+		}
+		return updatedProduct;
+		
+	}
+	
 	public void delete(int productId) {
-		Product product = productRepository.findById(productId).orElseThrow();
-		productRepository.delete(product);
+		try {
+			productRepository.deleteById(productId);
+		} catch (EmptyResultDataAccessException ex) {
+	        throw new ProductDoesNotExistExecption("Product with ID: " + productId + " does not exist");
+	    } catch (RuntimeException ex) {
+	        throw new ProductIsStillUsedInSomePizzaException("Product with ID: " + productId + " is associated with other entities and cannot be deleted");
+	    }
+			
 	}
 
 
@@ -74,7 +86,10 @@ public class ProductService {
 		 
 		List<Product> productList = productRepository.findAll();
 		return productList.stream().anyMatch(product -> product.getProductName().equals(productName));
-	}	       
+	}
+
+
+		       
 	       
 	             
 

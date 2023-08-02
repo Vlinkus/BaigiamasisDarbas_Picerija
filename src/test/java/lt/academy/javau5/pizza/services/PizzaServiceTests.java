@@ -75,9 +75,10 @@ public class PizzaServiceTests {
 	public void testDeletePizzaFromRepo(){
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
-		Pizza p1 = new Pizza("Margarita", null, 10.0, 20);
+		int id  = 1;
+		Pizza p1 = new Pizza(1,"Margarita", null, 10.0, 20, null);
 		// Act
-		service.deletePizza(p1);
+		service.deletePizza(id);
 		//Assert
 		verify(repo).delete(p1);
 	}
