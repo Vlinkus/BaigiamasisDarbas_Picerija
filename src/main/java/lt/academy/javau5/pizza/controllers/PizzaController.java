@@ -27,11 +27,9 @@ import lt.academy.javau5.pizza.entities.Pizza;
 
 import lt.academy.javau5.pizza.services.PizzaService;
 
-
 @RestController
 @RequestMapping("/api")
 public class PizzaController {
-
 	private PizzaService pizzaService;
 
 	@Autowired
@@ -116,9 +114,6 @@ public class PizzaController {
 //            return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
 //        }
 //    }
-	
-	
-	
 	
 //	@GetMapping("/dummyPizza")
 //	public void addDummy() {
