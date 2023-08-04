@@ -1,6 +1,6 @@
 package lt.academy.javau5.pizza.exceptions;
 
-public class ProductAlreadyExistException extends Exception{
+public class ProductAlreadyExistException extends RuntimeException{
 
 	/**
 	 * 

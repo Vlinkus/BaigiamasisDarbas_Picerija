@@ -31,7 +31,6 @@ public class Pizza {
 	@Column(name="id")
 	private Integer id;
 	
-	
 	@Column(name="pizzaName")
 	private String pizzaName;
 		
@@ -40,10 +39,10 @@ public class Pizza {
 	private byte[] pizzaPhoto;
 	
 	@Column(name="pizzaPrice")
-	private double pizzaPrice;
+	private Double pizzaPrice;
 	
 	@Column(name="pizzaSize")
-	private int pizzaSize;
+	private Integer pizzaSize;
 	
 	@JoinTable(name = "pizza_products", 
 				joinColumns = @JoinColumn(name = "pizza_id"),

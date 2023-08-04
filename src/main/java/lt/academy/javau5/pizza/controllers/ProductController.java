@@ -22,10 +22,10 @@ import lt.academy.javau5.pizza.services.ProductService;
 @RestController
 @RequestMapping("/api")
 public class ProductController {
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	// Show all products
 	@GetMapping("/products")
 	public List<Product> findAll() {
@@ -35,48 +35,37 @@ public class ProductController {
 	// Show product by ID
 	@GetMapping("/product/{productId}")
 	public Product getproduct(@PathVariable int productId) {
-		Product theProduct = productService.findById(productId);
-		if (theProduct == null) {
-			throw new RuntimeException("Produktas su nr: " + productId + " nerastas");
-		}
-		return theProduct;
+		return productService.findById(productId);
 	}
 
 	// Add product
 	@PostMapping("/product")
 	public ResponseEntity<String> addProduct(@RequestBody Product product) {
-	    try {
-	        productService.save(product);
-	        return ResponseEntity.ok("Product added successfully.");
-	    } catch (ProductAlreadyExistException e) {
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists.");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
-	    }
+		try {
+			productService.save(product);
+			return ResponseEntity.ok("Product added successfully.");
+		} catch (ProductAlreadyExistException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while processing the request.");
+		}
 	}
 
 	// Delete product
 	@DeleteMapping("/product/{productId}")
-	public String deleteProduct(@PathVariable int productId) {
-			productService.delete(productId);
-			return "Produktas su nr: " + productId + " ištrinta";
+	public ResponseEntity<String> deleteProduct(@PathVariable int productId) {
+		return ResponseEntity.ok(productService.delete(productId));
 	}
 
 	// Update product
 	@PutMapping("/product")
 	public ResponseEntity<String> updateProduct(@RequestBody Product product) {
-		 try {
-		        productService.update(product);
-		        return ResponseEntity.ok("Product updated successfully.");
-		    } catch (Exception e) {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
-		    }
+		try {
+			productService.update(product);
+			return ResponseEntity.ok("Product updated successfully.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
+		}
 	}
-
-	@GetMapping("/dummyProduct")
-	public void addProductDummies() {
-		productService.seedProductRepository();
-
-	}
-
 }
