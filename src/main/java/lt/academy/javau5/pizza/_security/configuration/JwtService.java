@@ -41,14 +41,6 @@ public class JwtService {
             UserDetails userDetails
     ) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
-//        return Jwts
-//                .builder()
-//                .setClaims(extraClaims)
-//                .setSubject(userDetails.getUsername())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 86_400_000))
-//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
     }
 
     public String generateRefreshToken(

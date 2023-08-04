@@ -21,27 +21,43 @@ import java.util.List;
 public class User implements UserDetails {
 	@Id
 	@GeneratedValue
+	@Column(nullable = false, unique = true)
 	private Integer id;
+
+	@Column(nullable = false)
 	private String firstname;
+
+	@Column(nullable = false)
 	private String lastname;
-//	private String username;
+
+	@Column(nullable = false)
+	private String username;
+
+	@Column(nullable = false)
 	private String email;
+
+	@Column(nullable = false)
 	private String password;
+
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
 	@OneToMany(mappedBy = "user")
 	private List<Token> tokens;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return role.getAuthorities();
 	}
+
 	@Override
 	public String getPassword() {
 		return password;
 	}
 	@Override
 	public String getUsername() {
-		return email;
+		return username;
 	}
 	@Override
 	public boolean isAccountNonExpired() {

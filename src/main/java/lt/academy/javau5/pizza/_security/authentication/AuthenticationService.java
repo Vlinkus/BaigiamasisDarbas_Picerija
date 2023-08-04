@@ -1,6 +1,9 @@
 package lt.academy.javau5.pizza._security.authentication;
 
 import lt.academy.javau5.pizza._security.configuration.JwtService;
+import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
+import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
+import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.tokens.Token;
 import lt.academy.javau5.pizza._security.tokens.TokenRepository;
@@ -32,12 +35,12 @@ public class AuthenticationService {
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
+                .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(request.getRole() == null ? Role.USER : request.getRole())
                 .build();
-        if (user.getRole() == null)
-            user.setRole(Role.USER);
+
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -51,11 +54,11 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
