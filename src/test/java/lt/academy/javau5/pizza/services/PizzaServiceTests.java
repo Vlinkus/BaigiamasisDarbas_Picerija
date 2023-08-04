@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.repositories.PizzaRepository;
+import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 
 @SpringBootTest
@@ -23,6 +24,9 @@ public class PizzaServiceTests {
 	
 	@Mock
 	PizzaRepository repo;
+	
+	@Mock
+	ProductRepository productRepo;
 	
 	@InjectMocks
 	PizzaService service;
@@ -64,11 +68,14 @@ public class PizzaServiceTests {
 	public void testSavePizzaToRepo(){
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
-		Pizza p1 = new Pizza("Margarita", null, 10.0, 20 );
+		int id = 1;
+		Pizza p = new Pizza(1, "Margarita", null, 10.0, 20 , null);
+		Optional<Pizza> p1 = Optional.of(new Pizza(1, "Margarita", null, 10.0, 20 , null));
+		when(repo.findById(id)).thenReturn(p1);
 		// Act
-		service.save(p1);
+		service.save(p);
 		//Assert
-		verify(repo).save(p1);
+		verify(repo).save(p);
 	}
 	
 	@Test

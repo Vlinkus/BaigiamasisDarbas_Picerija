@@ -45,7 +45,6 @@ public class ProductServiceTests {
 		List<Product> productListAct = service.findAll();
 
 		// Assert
-
 		Assertions.assertEquals(productListArr, productListAct);
 		verify(productRepository).findAll();
 
@@ -91,7 +90,7 @@ public class ProductServiceTests {
 
 		// Arrange
 		int id = 1;
-		Product product1 = new Product(1, "Agurkai", 10, null);
+		Product product1 = new Product(1, "Agurkai", 10.0, null);
 
 		// Act
 
