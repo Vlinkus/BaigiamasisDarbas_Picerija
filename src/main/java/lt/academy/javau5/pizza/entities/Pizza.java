@@ -3,6 +3,8 @@ package lt.academy.javau5.pizza.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,6 +53,12 @@ public class Pizza {
 	cascade= {CascadeType.PERSIST,
 			CascadeType.MERGE})
 	private List<Product> products;
+	
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY,
+	cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+	mappedBy = "pizzas")
+	private List<Order> orders;
 
 	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {		
 		this.pizzaName = pizzaName;

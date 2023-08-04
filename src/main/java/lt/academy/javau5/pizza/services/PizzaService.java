@@ -2,8 +2,10 @@ package lt.academy.javau5.pizza.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import lt.academy.javau5.pizza.entities.Pizza;
@@ -17,6 +19,15 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 @Service
 public class PizzaService {
 
+	
+	 @Autowired
+	    private MessageSource messageSource;
+
+	    public String getLocalizedText(String key, Locale locale) {
+	        return messageSource.getMessage(key, null, locale);
+	    }
+	
+	
 	@Autowired
 	private PizzaRepository pizzaRepository;	
 	@Autowired
