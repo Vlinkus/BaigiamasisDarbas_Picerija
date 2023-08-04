@@ -28,6 +28,7 @@ import lt.academy.javau5.pizza.services.PizzaService;
 @RestController
 @RequestMapping("/api")
 public class PizzaController {
+  
 	@Autowired
 	private PizzaService pizzaService;
 	
