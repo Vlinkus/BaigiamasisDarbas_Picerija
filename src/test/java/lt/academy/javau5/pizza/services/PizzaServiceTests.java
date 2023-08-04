@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import lt.academy.javau5.pizza.entities.Pizza;
 import lt.academy.javau5.pizza.repositories.PizzaRepository;
+import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 
 @SpringBootTest
@@ -23,6 +24,9 @@ public class PizzaServiceTests {
 	
 	@Mock
 	PizzaRepository repo;
+	
+	@Mock
+	ProductRepository productRepo;
 	
 	@InjectMocks
 	PizzaService service;
@@ -36,8 +40,8 @@ public class PizzaServiceTests {
 	public void testGetsListofPizzaFromRepo(){
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
-		Pizza p1 = new Pizza(1,"Margarita", null, 10.0, 20, null);
-		Pizza p2 = new Pizza(2,"Hawaian", null, 10.0, 20, null);
+		Pizza p1 = new Pizza("Margarita",null, 10, 10 );
+		Pizza p2 = new Pizza("Hawaian", null, 20.0, 20);
 		List<Pizza> pList = Arrays.asList(p1,p2);
 		when(repo.findAll()).thenReturn(pList);
 		// Act
@@ -51,7 +55,7 @@ public class PizzaServiceTests {
 	public void testFindPizzaById(){
 		//Arrange
 		int pizzaId = 1;
-		Optional<Pizza> p1 = Optional.of(new Pizza(1,"Margarita", null, 10.0, 20, null));
+		Optional<Pizza> p1 = Optional.of(new Pizza("Margarita", null, 10.0, 20));
 		when(repo.findById(pizzaId)).thenReturn(p1);
 		// Act
 		Pizza returnedPizza = service.findById(pizzaId);
@@ -64,20 +68,24 @@ public class PizzaServiceTests {
 	public void testSavePizzaToRepo(){
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
-		Pizza p1 = new Pizza(1,"Margarita", null, 10.0, 20, null);
+		int id = 1;
+		Pizza p = new Pizza(1, "Margarita", null, 10.0, 20 , null);
+		Optional<Pizza> p1 = Optional.of(new Pizza(1, "Margarita", null, 10.0, 20 , null));
+		when(repo.findById(id)).thenReturn(p1);
 		// Act
-		service.save(p1);
+		service.save(p);
 		//Assert
-		verify(repo).save(p1);
+		verify(repo).save(p);
 	}
 	
 	@Test
 	public void testDeletePizzaFromRepo(){
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
+		int id  = 1;
 		Pizza p1 = new Pizza(1,"Margarita", null, 10.0, 20, null);
 		// Act
-		service.deletePizza(p1);
+		service.deletePizza(id);
 		//Assert
 		verify(repo).delete(p1);
 	}
@@ -87,7 +95,7 @@ public class PizzaServiceTests {
 		//Arrange
 		// Pizza(int id, String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize,List<Product> products)
 		int id =  1;
-		Optional<Pizza> p1 = Optional.of(new Pizza(1,"Margarita", null, 10.0, 20, null));
+		Optional<Pizza> p1 = Optional.of(new Pizza("Margarita", null, 10.0, 20));
 		String mockImagePath = "path/Pizzeriaa_BackEnd/src/test/java/lt/academy/javau5/pizza/testPhoto.jpg";
 		byte[] photoBytes = null;
 		when(repo.findById(id)).thenReturn(p1);

@@ -36,7 +36,7 @@ public class ProductServiceTests {
 
 		// Arrange
 
-		Product product1 = new Product(1, "Agurkai",10, null );
+		Product product1 = new Product("Agurkai", 10);
 		List<Product> productListArr = Arrays.asList(product1);
 		when(productRepository.findAll()).thenReturn(productListArr);
 
@@ -45,7 +45,6 @@ public class ProductServiceTests {
 		List<Product> productListAct = service.findAll();
 
 		// Assert
-
 		Assertions.assertEquals(productListArr, productListAct);
 		verify(productRepository).findAll();
 
@@ -57,7 +56,7 @@ public class ProductServiceTests {
 		// Arrange
 
 		int productId = 1;
-		Optional<Product> product1 = Optional.of(new Product(productId, "Agurkai",10, null));
+		Optional<Product> product1 = Optional.of(new Product("Agurkai", 10));
 		when(productRepository.findById(productId)).thenReturn(product1);
 
 		// Act
@@ -71,11 +70,11 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void testSaveProductToRepository() {
+	public void testSaveProductToRepository() throws Exception {
 
 		// Arrange
 
-		Product product1 = new Product(1, "Agurkai",10, null);
+		Product product1 = new Product("Agurkai", 10);
 
 		// Act
 
@@ -85,23 +84,21 @@ public class ProductServiceTests {
 
 		verify(productRepository).save(product1);
 	}
-	
+
 	@Test
-	public void testDeleteProductFromRepo(){
-		
-		//Arrange
-				
-		Product product1 = new Product(1, "Agurkai",10, null);
-		
+	public void testDeleteProductFromRepo() {
+
+		// Arrange
+		int id = 1;
+		Product product1 = new Product(1, "Agurkai", 10.0, null);
+
 		// Act
-		
-		service.delete(product1);
-		
-		//Assert
-		
+
+		service.delete(id);
+
+		// Assert
+
 		verify(productRepository).delete(product1);
 	}
-	
-	
 
 }

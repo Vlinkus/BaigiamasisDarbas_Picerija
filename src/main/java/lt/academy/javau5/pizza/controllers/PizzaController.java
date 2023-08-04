@@ -1,16 +1,12 @@
 package lt.academy.javau5.pizza.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,19 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lt.academy.javau5.pizza.entities.Pizza;
-
+import lt.academy.javau5.pizza.entities.PizzaResponseEntity;
+import lt.academy.javau5.pizza.exceptions.PizzaAlreadyExistException;
+import lt.academy.javau5.pizza.exceptions.PizzaDoesNotExistException;
 import lt.academy.javau5.pizza.services.PizzaService;
 
 @RestController
 @RequestMapping("/api")
 public class PizzaController {
-	private PizzaService pizzaService;
-
+  
 	@Autowired
-	public PizzaController(PizzaService thePizzaService) {
-		pizzaService = thePizzaService;
-	}
-
+	private PizzaService pizzaService;
+	
 	// Shows all pizzas
 	@GetMapping("/pizza")
 	public List<Pizza> findAll() {
@@ -46,41 +41,31 @@ public class PizzaController {
 	// Shows pizza by ID
 	@GetMapping("/pizza/{pizzaId}")
 	public Pizza getPizza(@PathVariable int pizzaId) {
-		Pizza thePizza = pizzaService.findById(pizzaId);
-		if (thePizza == null) {
-			throw new RuntimeException("Pica su nr: " + pizzaId + " nerasta");
-		}
-		return thePizza;
+		return pizzaService.findById(pizzaId);
 	}
 
 	// Add pizza
 	@PostMapping("/pizza")
-	public Pizza addPizza(@RequestBody Pizza thePizza) {
-		thePizza.setId(0);
-		Pizza dbPizza = pizzaService.save(thePizza);
-		return dbPizza;
+	public PizzaResponseEntity addPizza(@RequestBody Pizza thePizza) {
+				Pizza pizza = pizzaService.save(thePizza);
+				if(pizza ==null)
+				return new PizzaResponseEntity(pizza,HttpStatus.BAD_REQUEST, "Saving Pizza Failed");
+				return new PizzaResponseEntity(pizza,HttpStatus.OK, "Pizza saved succesfully");
 	}
 
 	// Delete pizza
 	@DeleteMapping("/pizza/{pizzaId}")
-	public String deletePizza(@PathVariable int pizzaId) {
-		Pizza tempPizza = pizzaService.findById(pizzaId);
-		if (tempPizza != null) {
-			pizzaService.deletePizza(tempPizza);
-
-		} else {
-			throw new RuntimeException("Pica su nr: " + pizzaId + " nerasta");
-		}
-
-		return "Pica su nr: " + pizzaId + " ištrinta";
+	public ResponseEntity<String> deletePizza(@PathVariable int pizzaId) {
+		return ResponseEntity.ok(pizzaService.deletePizza(pizzaId));
 	}
 
 	// Update pizza
-
 	@PutMapping("/pizza")
-	public Pizza updatePizza(@RequestBody Pizza thePizza) {
-		Pizza dbPizza = pizzaService.save(thePizza);
-		return dbPizza;
+	public PizzaResponseEntity updatePizza(@RequestBody Pizza pizza) {
+		Pizza savePizza = pizzaService.update(pizza);
+		if(savePizza ==null)
+			return new PizzaResponseEntity(pizza,HttpStatus.BAD_REQUEST, "Saving Update Failed");
+			return new PizzaResponseEntity(pizza,HttpStatus.OK, "Pizza Updated Succesfully");
 	}
 
 	// Add pizza photo
@@ -89,7 +74,7 @@ public class PizzaController {
 			@RequestParam("pizzaPhoto") MultipartFile file) {
 		try {
 			if (!file.isEmpty()
-					&& (file.getContentType().equals("image/png") || file.getContentType().equals("image/jpeg"))) {
+					&& (file.getContentType().equals("image/jpg") || file.getContentType().equals("image/jpeg"))) {
 				byte[] photoBytes = file.getBytes();
 				pizzaService.uploadPizzaPhoto(pizzaId, photoBytes);
 				return ResponseEntity.ok("Nuotrauka sėkmingai įkelta!");
@@ -102,33 +87,17 @@ public class PizzaController {
 		}
 	}
 
-//	@GetMapping("/pizza/{pizzaId}/photo")
-//    public ResponseEntity<byte[]> getPizzaPhotoById(@PathVariable int pizzaId) {
-//        Pizza pizza = pizzaService.findById(pizzaId);
-//        if (pizza == null || pizza.getPizzaPhoto() == null) {
-//            return ResponseEntity.notFound().build();
-//        } else {
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.IMAGE_JPEG); 
-//            headers.setContentLength(pizza.getPizzaPhoto().length);
-//            return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
-//        }
-//    }
-	
-//	@GetMapping("/dummyPizza")
-//	public void addDummy() {
-//		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);
-//		Product prod = new Product("Agurkėliai", p);
-//		List<Product> testProd = new ArrayList<>();
-//		testProd.add(prod);
-//		p.setProducts(testProd);
-//		pizzaService.save(p);
-//	}
-	
-	@GetMapping("/dummyPizza")
-	public void addPizzaDummies() {
-		pizzaService.seedPizzaRepository();
-		
+	@GetMapping("/pizza/{pizzaId}/photo")
+	public ResponseEntity<byte[]> getPizzaPhotoById(@PathVariable int pizzaId) {
+		Pizza pizza = pizzaService.findById(pizzaId);
+		if (pizza == null || pizza.getPizzaPhoto() == null) {
+			return ResponseEntity.notFound().build();
+		} else {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.IMAGE_JPEG);
+			headers.setContentLength(pizza.getPizzaPhoto().length);
+			return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
+		}
 	}
 
 }

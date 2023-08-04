@@ -1,8 +1,7 @@
 package lt.academy.javau5.pizza.entities;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,56 +10,62 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="pizza")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Pizza {
 	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
-	
+	@Column(name="id")
+	private Integer id;
 	
 	@Column(name="pizzaName")
 	private String pizzaName;
 		
 	
 	@Column(name="pizzaPhoto", length=1048576)
-	
 	private byte[] pizzaPhoto;
 	
 	@Column(name="pizzaPrice")
-	private double pizzaPrice;
+	private Double pizzaPrice;
 	
 	@Column(name="pizzaSize")
-	private int pizzaSize;
+	private Integer pizzaSize;
 	
-	@OneToMany(mappedBy = "pizza", fetch=FetchType.EAGER, cascade= {CascadeType.PERSIST,CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH})
-   
-    private List<Product> products;
+	@JoinTable(name = "pizza_products", 
+				joinColumns = @JoinColumn(name = "pizza_id"),
+				inverseJoinColumns = @JoinColumn(name = "product_id"))
+	@ManyToMany(fetch=FetchType.LAZY,
+	cascade= {CascadeType.PERSIST,
+			CascadeType.MERGE})
+	private List<Product> products;
 
-	
-	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize, List<Product> products) {
-		
+	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {		
 		this.pizzaName = pizzaName;
 		this.pizzaPhoto = pizzaPhoto;
 		this.pizzaPrice = pizzaPrice;
-		this.pizzaSize = pizzaSize;
-		this.products = products;
+		this.pizzaSize = pizzaSize;	
 	}
 
-	
-	
+	public void addProduct(Product theProduct) {
+		if(products==null) {
+			products = new ArrayList<>();	
+		}
+		products.add(theProduct);
+	}
+
 	//If needed
 	/*
 	@Column(name="isSpicy")
