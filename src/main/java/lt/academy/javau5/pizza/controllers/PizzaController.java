@@ -54,13 +54,8 @@ public class PizzaController {
 
 	// Delete pizza
 	@DeleteMapping("/pizza/{pizzaId}")
-	public ResponseEntity<String> deletePizza(@PathVariable int pizzaId) { 
-		 try {
-		        String msg = pizzaService.deletePizza(pizzaId);
-		        return ResponseEntity.ok(msg);
-		    } catch (PizzaDoesNotExistException e) {
-		        return ResponseEntity.badRequest().body(e.getMessage());
-		    }
+	public ResponseEntity<String> deletePizza(@PathVariable int pizzaId) {
+		return ResponseEntity.ok(pizzaService.deletePizza(pizzaId));
 	}
 
 	// Update pizza
@@ -103,20 +98,5 @@ public class PizzaController {
 			return new ResponseEntity<>(pizza.getPizzaPhoto(), headers, HttpStatus.OK);
 		}
 	}
-
-//	@GetMapping("/dummyPizza")
-//	public void addDummy() {
-//		Pizza p = new Pizza("TESTAVIMAS", null, 10, 20, null);
-//		Product prod = new Product("Agurkėliai", p);
-//		List<Product> testProd = new ArrayList<>();
-//		testProd.add(prod);
-//		p.setProducts(testProd);
-//		pizzaService.save(p);
-//	}
-	
-//	@GetMapping("/dummyPizza")
-//	public void addPizzaDummies() {
-//		pizzaService.seedPizzaRepository();
-//	}
 
 }

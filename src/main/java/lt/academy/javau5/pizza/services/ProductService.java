@@ -36,10 +36,13 @@ public class ProductService {
 		Product product = productRepository.findProductByProductName(theProduct.getProductName());
 		if(product != null)
 			throw new ProductAlreadyExistException("Product with this name already exist");
+		theProduct.getId();
 		return productRepository.save(theProduct);
 	}
 	
 	public Product update(Product product) {
+		Product aproduct = productRepository.findById(product.getId()).orElseThrow(
+				() -> new ProductDoesNotExistExecption("Product with ID: " + product.getId() + " does not exist"));
 		Product updatedProduct = null;
 		if(product != null && product.getId() !=null) {
 			updatedProduct = productRepository.save(product);
@@ -48,58 +51,14 @@ public class ProductService {
 		
 	}
 	
-	public void delete(int productId) {
+	public String delete(int productId) {
+		Product product = productRepository.findById(productId).orElseThrow(
+				() -> new ProductDoesNotExistExecption("Product with ID: " + productId + " does not exist"));
 		try {
-			productRepository.deleteById(productId);
-		} catch (EmptyResultDataAccessException ex) {
-	        throw new ProductDoesNotExistExecption("Product with ID: " + productId + " does not exist");
-	    } catch (RuntimeException ex) {
+			productRepository.delete(product);
+			return "Product Deleted Succesfully";
+		} catch (RuntimeException ex) {
 	        throw new ProductIsStillUsedInSomePizzaException("Product with ID: " + productId + " is associated with other entities and cannot be deleted");
-	    }
-			
+	    }			
 	}
-
-
-	public boolean seedProductRepository() {
-		if (productRepository.count()==0){
-			Product p1 = new Product("Produktas1", 1 );
-			Product p2 = new Product("Produktas2",  2);
-			Product p3 = new Product("Produktas3",  3);
-			Product p4 = new Product("Produktas4",  4);
-			Product p5 = new Product("Produktas5",  5);
-			Product p6 = new Product("Produktas6",  6);
-			productRepository.save(p1);
-			productRepository.save(p2);
-			productRepository.save(p3);
-			productRepository.save(p4);
-			productRepository.save(p5);
-			productRepository.save(p6);
-		}
-		return false;
-	}
-
-
-	
-
-
-	public boolean productAlreadyExists(String productName) {
-		 
-		List<Product> productList = productRepository.findAll();
-		return productList.stream().anyMatch(product -> product.getProductName().equals(productName));
-	}
-
-
-		       
-	       
-	             
-
-
-	
-	
-	
-
-
-	
-	
-
 }
