@@ -33,7 +33,7 @@ public class Product {
 	private String productName;
 
 	@Column(name = "product_price")
-	private double productPrice;
+	private Double productPrice;
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "products")
