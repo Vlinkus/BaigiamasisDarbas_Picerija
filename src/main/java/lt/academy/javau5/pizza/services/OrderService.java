@@ -61,7 +61,7 @@ public class OrderService {
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 
 		theOrder.setPizzas(checkedPizzas);
-		theOrder.setPrice(Math.floor(totalPrice));
+		theOrder.setPrice(Math.floor(totalPrice*100)/100);
 
 		return orderRepository.save(theOrder);
 	}
@@ -82,7 +82,7 @@ public class OrderService {
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 
 		existingOrder.setPizzas(checkedPizzas);
-		existingOrder.setPrice(Math.floor(totalPrice));
+		existingOrder.setPrice(Math.floor(totalPrice*100)/100);
 
 		return orderRepository.save(existingOrder);
 	}
