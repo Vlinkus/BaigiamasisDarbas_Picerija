@@ -10,7 +10,7 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig {
     @Bean
-    public AcceptHeaderLocaleResolver localeResolver() {
+    public AcceptHeaderLocaleResolver customLocaleResolver() {
         final AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
         resolver.setDefaultLocale(Locale.US);
         return resolver;

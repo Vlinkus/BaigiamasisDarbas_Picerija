@@ -18,13 +18,6 @@ import lt.academy.javau5.pizza.repositories.PizzaRepository;
 @Service
 public class OrderService {
 
-//	@Autowired
-//	private MessageSource messageSource;
-//
-//	public String getLocalizedText(String key, Locale locale) {
-//		return messageSource.getMessage(key, null, locale);
-//	}
-
 	@Autowired
 	private OrderRepository orderRepository;
 
@@ -49,11 +42,10 @@ public class OrderService {
 				throw new OrderAlreadyExistsException("Order with ID: " + theOrder.getId() + " already exists");
 			}
 		}
-
 		List<Pizza> checkedPizzas = checkIfPizzasExist(theOrder.getPizzas());
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 		theOrder.setPizzas(checkedPizzas);
-		theOrder.setPrice(Math.floor(totalPrice));
+		theOrder.setPrice(Math.floor(totalPrice*100)/100);
 		return orderRepository.save(theOrder);
 	}
 
@@ -66,7 +58,7 @@ public class OrderService {
 		List<Pizza> checkedPizzas = checkIfPizzasExist(theOrder.getPizzas());
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 		existingOrder.setPizzas(checkedPizzas);
-		existingOrder.setPrice(Math.floor(totalPrice));
+		existingOrder.setPrice(Math.floor(totalPrice*100)/100);
 		return orderRepository.save(existingOrder);
 	}
 
@@ -78,7 +70,6 @@ public class OrderService {
 
 	private double calculateOrderPrice(List<Pizza> pizzas) {
 		double totalPrice = pizzas.stream().mapToDouble(Pizza::getPizzaPrice).sum();
-
 		return totalPrice;
 	}
 
