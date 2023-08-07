@@ -45,6 +45,9 @@ public class Order {
 
 	@Column(name = "pizza_orders_price")
 	private double price;
+	
+//	ToDo
+//	User ManyToMany relationship
 
 	public void addPizza(Pizza thePizza) {
 		if (pizzas == null) {
