@@ -36,7 +36,7 @@ public class OrderController {
 	//Get Order by Id
 	
 	@GetMapping("/order/{orderId}")
-	public Order getCart(@PathVariable int orderId) {
+	public Order getOrder(@PathVariable int orderId) {
 		return orderService.findById(orderId);
 	}
 	
@@ -66,7 +66,7 @@ public class OrderController {
 	// Update order
 	
 		@PutMapping("/order")
-		public OrderResponseEntity updateCart(@RequestBody Order order) {
+		public OrderResponseEntity updateOrder(@RequestBody Order order) {
 			Order saveOrder = orderService.update(order);
 			if(saveOrder ==null)
 				return new OrderResponseEntity(saveOrder,HttpStatus.BAD_REQUEST, "Saving Update Failed");
