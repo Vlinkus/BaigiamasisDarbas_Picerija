@@ -18,15 +18,6 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 @Service
 public class PizzaService {
-
-	
-	 @Autowired
-	    private MessageSource messageSource;
-
-	    public String getLocalizedText(String key, Locale locale) {
-	        return messageSource.getMessage(key, null, locale);
-	    }
-	
 	
 	@Autowired
 	private PizzaRepository pizzaRepository;	
@@ -42,8 +33,7 @@ public class PizzaService {
 	}
 
 	public Pizza findById(int pizzaId) {
-		Pizza pizza = pizzaRepository.findById(pizzaId)
-				.orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " does  not exist"));
+		Pizza pizza = findPizzaByIdOrThrowException(pizzaId);
 		return pizza;
 	}
 
@@ -55,16 +45,17 @@ public class PizzaService {
 	}	
 
 	public Pizza update(Pizza pizza) {
-		if (pizza != null && pizza.getId() == null)
-			throw new PizzaDoesNotExistException("Pizza with ID: " + pizza.getId() + " can not be updated");
-		pizzaRepository.findById(pizza.getId()).orElseThrow(
-				() -> new PizzaDoesNotExistException("Pizza with ID: " + pizza.getId() + " does  not exist"));		
+		if (pizza == null || pizza.getId() == null)
+			throw new PizzaDoesNotExistException("Pizza can not be updated");
+		if (pizza.getPizzaName() == null || pizza.getPizzaName() == "") {
+			throw new NullCanNotBeSavedException("Pizza can not be updated if name is empty");
+		}
+		findPizzaByIdOrThrowException(pizza.getId());
 		return pizzaRepository.save(pizza);
 	}
 
 	public String deletePizza(int pizzaId) {
-		Pizza pizza = pizzaRepository.findById(pizzaId)
-				.orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " does  not exist"));
+		Pizza pizza = findPizzaByIdOrThrowException(pizzaId);
 		pizzaRepository.delete(pizza);
 		return "Pizza Deleted Succesfully";
 	}
@@ -78,7 +69,7 @@ public class PizzaService {
 	
 	//Methods
 	
-	private List<Product> checkIfAllProductsInPizzaAreSavedInDataBase(Pizza piza) {
+	public List<Product> checkIfAllProductsInPizzaAreSavedInDataBase(Pizza piza) {
 		List<Product> products = productRepository.findAll();
 		List<Product> productsInPizza = new ArrayList<>();
 		if (piza.getProducts() != null) {
@@ -107,7 +98,13 @@ public class PizzaService {
 				if (pizza != null)
 					throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
 			}
+		}
 	}
+	
+	private Pizza findPizzaByIdOrThrowException(Integer pizzaId) {
+		Pizza pizza = pizzaRepository.findById(pizzaId)
+				.orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " does  not exist"));
+		return pizza;
 	}
 	
 }

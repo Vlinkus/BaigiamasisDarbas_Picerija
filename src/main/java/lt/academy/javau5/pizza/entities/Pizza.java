@@ -61,11 +61,12 @@ public class Pizza {
 	mappedBy = "pizzas")
 	private List<Order> orders;
 
-	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, int pizzaSize) {		
+	public Pizza(String pizzaName, byte[] pizzaPhoto, double pizzaPrice, Integer pizzaSize, List<Product> products) {		
 		this.pizzaName = pizzaName;
 		this.pizzaPhoto = pizzaPhoto;
 		this.pizzaPrice = pizzaPrice;
-		this.pizzaSize = pizzaSize;	
+		this.pizzaSize = pizzaSize;
+		this.products = products;
 	}
 
 	public void addProduct(Product theProduct) {
@@ -73,6 +74,17 @@ public class Pizza {
 			products = new ArrayList<>();	
 		}
 		products.add(theProduct);
+	}
+
+	public Pizza(String pizzaName, byte[] pizzaPhoto, Double pizzaPrice, Integer pizzaSize, List<Product> products,
+			List<Order> orders) {
+		super();
+		this.pizzaName = pizzaName;
+		this.pizzaPhoto = pizzaPhoto;
+		this.pizzaPrice = pizzaPrice;
+		this.pizzaSize = pizzaSize;
+		this.products = products;
+		this.orders = orders;
 	}
 
 	//If needed
