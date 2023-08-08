@@ -2,10 +2,8 @@ package lt.academy.javau5.pizza.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import lt.academy.javau5.pizza.entities.Pizza;
@@ -24,7 +22,6 @@ public class PizzaService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
 	}
@@ -75,7 +72,7 @@ public class PizzaService {
 						.findFirst().orElse(null);
 				if (productFromDB != null)
 					productsInPizza.add(productFromDB);
-				else { if(p.getProductPrice() == null) p.setProductPrice(1.5);
+				else { if(p.getProductPrice() == null) p.setProductPrice(2.5);
 					productsInPizza.add(productRepository.save(p));
 				}
 			});
@@ -87,15 +84,15 @@ public class PizzaService {
 		if (thePizza == null || thePizza.getPizzaName() == null || thePizza.getPizzaName() == "") {
 			throw new NullCanNotBeSavedException("Empty pizza can not be saved");
 		} else { 
-			Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
-			if (pizza != null)
-				throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
-			if (thePizza.getId() != null) {
-				pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
+				Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
 				if (pizza != null)
-					throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
+					throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
+				if (thePizza.getId() != null) {
+					pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
+					if (pizza != null)
+						throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
+				}
 			}
-		}
 	}
 	
 	private Pizza findPizzaByIdOrThrowException(Integer pizzaId) {

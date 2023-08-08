@@ -169,14 +169,40 @@ public class PizzaServiceTests {
     }
     
     @Test
-    public void testTryUpdatePizzaWithPizzaNameNull() {
+    public void testTrySavePizzaWithPizzaNameNull() {
     	//Arrange
-    	Pizza pizzaToUpdate = new Pizza(1, null, null, 10.0, 20, null, null);
+    	Pizza pizzaToUpdate = new Pizza(null, null, 10.0, 20, null, null);
         // Act and Assert
     	NullCanNotBeSavedException exception = Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
             service.save(pizzaToUpdate);
         }, "Empty pizza can not be saved");
     	Assertions.assertEquals("Empty pizza can not be saved", exception.getMessage());
+        verify(repo, never()).findById(any());
+        verify(repo, never()).save(any());
+    }
+    
+    @Test
+    public void testTryUpdatePizzaWithPizzaNameNull() {
+    	//Arrange
+    	Pizza pizzaToUpdate = new Pizza(1, null, null, 10.0, 20, null, null);
+        // Act and Assert
+    	NullCanNotBeSavedException exception = Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
+            service.update(pizzaToUpdate);
+        }, "Empty pizza can not be saved");
+    	Assertions.assertEquals("Pizza can not be updated if name is empty", exception.getMessage());
+        verify(repo, never()).findById(any());
+        verify(repo, never()).save(any());
+    }
+    
+    @Test
+    public void testTryUpdatePizzaWithPizzaNameEmpty() {
+    	//Arrange
+    	Pizza pizzaToUpdate = new Pizza(1, "", null, 10.0, 20, null, null);
+        // Act and Assert
+    	NullCanNotBeSavedException exception = Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
+            service.update(pizzaToUpdate);
+        }, "Empty pizza can not be saved");
+    	Assertions.assertEquals("Pizza can not be updated if name is empty", exception.getMessage());
         verify(repo, never()).findById(any());
         verify(repo, never()).save(any());
     }
