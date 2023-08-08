@@ -91,6 +91,17 @@ public class OrderService {
 				.orElseThrow(() -> new OrderDoesNotExistException("Order with ID: " + orderId + " was not found"));
 		return order;
 	}
+	
+	
+
+	    private void updateOrderPrice(Order order) {
+	        double totalPrice = calculateOrderPrice(order.getPizzas());
+	        order.setPrice(Math.floor(totalPrice * 100) / 100);
+	    }
+
+	    
+	}
+
 
 	
-}
+

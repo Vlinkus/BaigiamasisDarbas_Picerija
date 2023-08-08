@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lt.academy.javau5.pizza.entities.Order;
 import lt.academy.javau5.pizza.exceptions.OrderDoesNotExistException;
+import lt.academy.javau5.pizza.exceptions.PizzaDoesNotExistException;
 import lt.academy.javau5.pizza.entities.OrderResponseEntity;
 import lt.academy.javau5.pizza.services.OrderService;
 
@@ -72,7 +73,7 @@ public class OrderController {
 				return new OrderResponseEntity(saveOrder,HttpStatus.BAD_REQUEST, "Saving Update Failed");
 				return new OrderResponseEntity(saveOrder,HttpStatus.OK, "Order Updated Succesfully");
 		}
-
-
+		
+		
 	
 }

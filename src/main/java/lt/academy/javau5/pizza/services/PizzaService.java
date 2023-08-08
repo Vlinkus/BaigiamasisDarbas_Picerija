@@ -84,15 +84,15 @@ public class PizzaService {
 		if (thePizza == null || thePizza.getPizzaName() == null || thePizza.getPizzaName() == "") {
 			throw new NullCanNotBeSavedException("Empty pizza can not be saved");
 		} else { 
-			Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
-			if (pizza != null)
-				throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
-			if (thePizza.getId() != null) {
-				pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
+				Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
 				if (pizza != null)
-					throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
+					throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
+				if (thePizza.getId() != null) {
+					pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
+					if (pizza != null)
+						throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
+				}
 			}
-		}
 	}
 	
 	private Pizza findPizzaByIdOrThrowException(Integer pizzaId) {

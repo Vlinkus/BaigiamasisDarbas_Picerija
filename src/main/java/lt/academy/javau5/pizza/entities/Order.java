@@ -1,8 +1,6 @@
 package lt.academy.javau5.pizza.entities;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,11 +15,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
-
-
-
 
 @Data
 @AllArgsConstructor
@@ -52,22 +45,6 @@ public class Order {
 	public Order(List<Pizza> pizzas, double price) {
 		this.pizzas = pizzas;
 		this.price = price;
-	}	
-	
-//	public void addPizza(Pizza thePizza) {
-//		if (pizzas == null)
-//			pizzas = new ArrayList<>();
-//		pizzas.add(thePizza);		
-//	}
-//
-//	public void removePizza(Pizza thePizza) {
-//		if (pizzas != null) {
-//			pizzas.remove(thePizza);	
-//		}
-//	}
-
-	
-
-	
+	}		
 
 }
