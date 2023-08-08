@@ -93,6 +93,45 @@ public class OrderService {
 				.orElseThrow(() -> new OrderDoesNotExistException("Order with ID: " + orderId + " was not found"));
 		return order;
 	}
+	
+	
+
+	    public Order addPizzaToOrder(int orderId, int pizzaId) {
+	        Order order = findById(orderId);
+	        Pizza pizzaToAdd = pizzaRepository.findById(pizzaId)
+	                .orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " not found"));
+
+	        if (!order.getPizzas().contains(pizzaToAdd)) {
+	            order.getPizzas().add(pizzaToAdd);
+	            updateOrderPrice(order);
+	            return orderRepository.save(order);
+	        } else {
+	            throw new RuntimeException("Pizza is already in the order");
+	        }
+	    }
+
+	    public Order removePizzaFromOrder(int orderId, int pizzaId) {
+	        Order order = findById(orderId);
+	        Pizza pizzaToRemove = pizzaRepository.findById(pizzaId)
+	                .orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " not found"));
+
+	        if (order.getPizzas().contains(pizzaToRemove)) {
+	            order.getPizzas().remove(pizzaToRemove);
+	            updateOrderPrice(order);
+	            return orderRepository.save(order);
+	        } else {
+	            throw new RuntimeException("Pizza is not in the order");
+	        }
+	    }
+
+	    private void updateOrderPrice(Order order) {
+	        double totalPrice = calculateOrderPrice(order.getPizzas());
+	        order.setPrice(Math.floor(totalPrice * 100) / 100);
+	    }
+
+	    
+	}
+
 
 	
-}
+
