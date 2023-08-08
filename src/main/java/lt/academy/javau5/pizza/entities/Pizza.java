@@ -69,12 +69,12 @@ public class Pizza {
 		this.products = products;
 	}
 
-	public void addProduct(Product theProduct) {
-		if(products==null) {
-			products = new ArrayList<>();	
-		}
-		products.add(theProduct);
-	}
+//	public void addProduct(Product theProduct) {
+//		if(products==null) {
+//			products = new ArrayList<>();	
+//		}
+//		products.add(theProduct);
+//	}
 
 	public Pizza(String pizzaName, byte[] pizzaPhoto, Double pizzaPrice, Integer pizzaSize, List<Product> products,
 			List<Order> orders) {

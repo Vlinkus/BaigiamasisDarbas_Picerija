@@ -210,7 +210,7 @@ public class ProductServiceTests {
 	}
 	
 	@Test
-	public void testTryUpdateProductWithoutIdThatDoesNotExist(){
+	public void testTryUpdateProductWithIdThatDoesNotExist(){
 		// Arrange
 		int id = 1;
 		Optional<Product> existingProduct =Optional.of(new Product(id,"Agurkai", 10.0, null));

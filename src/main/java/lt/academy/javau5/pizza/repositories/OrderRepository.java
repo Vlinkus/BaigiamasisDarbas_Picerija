@@ -10,5 +10,4 @@ import lt.academy.javau5.pizza.entities.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>{
 
-		Optional<Order>findOrderById(int id);
 }

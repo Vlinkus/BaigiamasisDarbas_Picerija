@@ -48,21 +48,25 @@ public class Order {
 	
 //	ToDo
 //	User ManyToMany relationship
+	
+	public Order(List<Pizza> pizzas, double price) {
+		this.pizzas = pizzas;
+		this.price = price;
+	}	
+	
+//	public void addPizza(Pizza thePizza) {
+//		if (pizzas == null)
+//			pizzas = new ArrayList<>();
+//		pizzas.add(thePizza);		
+//	}
+//
+//	public void removePizza(Pizza thePizza) {
+//		if (pizzas != null) {
+//			pizzas.remove(thePizza);	
+//		}
+//	}
 
-	public void addPizza(Pizza thePizza) {
-		if (pizzas == null) {
-			pizzas = new ArrayList<>();
-		}
-		pizzas.add(thePizza);
-		
-	}
-
-	public void removePizza(Pizza thePizza) {
-		if (pizzas != null) {
-			pizzas.remove(thePizza);
-			
-		}
-	}
+	
 
 	
 

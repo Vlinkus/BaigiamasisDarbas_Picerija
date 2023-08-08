@@ -2,10 +2,8 @@ package lt.academy.javau5.pizza.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import lt.academy.javau5.pizza.entities.Pizza;
@@ -23,10 +21,6 @@ public class PizzaService {
 	private PizzaRepository pizzaRepository;	
 	@Autowired
 	private ProductRepository productRepository;
-
-	public PizzaService(PizzaRepository thePizzaRepository) {
-		pizzaRepository = thePizzaRepository;
-	}
 
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
@@ -78,7 +72,7 @@ public class PizzaService {
 						.findFirst().orElse(null);
 				if (productFromDB != null)
 					productsInPizza.add(productFromDB);
-				else { if(p.getProductPrice() == null) p.setProductPrice(1.5);
+				else { if(p.getProductPrice() == null) p.setProductPrice(2.5);
 					productsInPizza.add(productRepository.save(p));
 				}
 			});
