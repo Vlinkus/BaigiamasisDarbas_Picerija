@@ -24,10 +24,7 @@ public class PizzaService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public PizzaService(PizzaRepository thePizzaRepository) {
-		pizzaRepository = thePizzaRepository;
-	}
-
+	
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
 	}

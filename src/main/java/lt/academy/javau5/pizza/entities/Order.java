@@ -49,21 +49,6 @@ public class Order {
 //	ToDo
 //	User ManyToMany relationship
 
-	public void addPizza(Pizza thePizza) {
-		if (pizzas == null) {
-			pizzas = new ArrayList<>();
-		}
-		pizzas.add(thePizza);
-		
-	}
-
-	public void removePizza(Pizza thePizza) {
-		if (pizzas != null) {
-			pizzas.remove(thePizza);
-			
-		}
-	}
-
 	
 
 }

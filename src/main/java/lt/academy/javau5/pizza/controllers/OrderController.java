@@ -74,28 +74,6 @@ public class OrderController {
 				return new OrderResponseEntity(saveOrder,HttpStatus.OK, "Order Updated Succesfully");
 		}
 		
-		// Add pizza to order
-		@PutMapping("/order/{orderId}/addPizza/{pizzaId}")
-		public OrderResponseEntity addPizzaToOrder(@PathVariable int orderId, @PathVariable int pizzaId) {
-		    try {
-		        Order updatedOrder = orderService.addPizzaToOrder(orderId, pizzaId);
-		        return new OrderResponseEntity(updatedOrder, HttpStatus.OK, "Pizza added to order");
-		    } catch (OrderDoesNotExistException | PizzaDoesNotExistException e) {
-		        return new OrderResponseEntity(null, HttpStatus.BAD_REQUEST, e.getMessage());
-		    }
-		}
-
-		// Remove pizza from order
-		@PutMapping("/order/{orderId}/removePizza/{pizzaId}")
-		public OrderResponseEntity removePizzaFromOrder(@PathVariable int orderId, @PathVariable int pizzaId) {
-		    try {
-		        Order updatedOrder = orderService.removePizzaFromOrder(orderId, pizzaId);
-		        return new OrderResponseEntity(updatedOrder, HttpStatus.OK, "Pizza removed from order");
-		    } catch (OrderDoesNotExistException | PizzaDoesNotExistException e) {
-		        return new OrderResponseEntity(null, HttpStatus.BAD_REQUEST, e.getMessage());
-		    }
-		}
-
-
+		
 	
 }
