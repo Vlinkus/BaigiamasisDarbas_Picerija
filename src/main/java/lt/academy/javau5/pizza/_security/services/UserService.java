@@ -17,6 +17,8 @@ public class UserService {
 
     public Optional<User> getByUsername(String email) { return repo.findByEmail(email); }
 
+    public List<String> getAllUsernames() { return repo.getAllUsernames(); }
+
     public List<User> getAll() { return repo.findAll(); }
 
     public User saveUser(User user) { return repo.save(user); }
@@ -28,6 +30,4 @@ public class UserService {
     public boolean hasEmail(String email) { return repo.existsByEmail(email); }
 
     public boolean hasUsername(String username) { return repo.existsByUsername(username); }
-
-    
 }

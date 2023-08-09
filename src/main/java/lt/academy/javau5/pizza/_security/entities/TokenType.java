@@ -1,4 +1,4 @@
-package lt.academy.javau5.pizza._security.tokens;
+package lt.academy.javau5.pizza._security.entities;
 
 public enum TokenType {
   BEARER

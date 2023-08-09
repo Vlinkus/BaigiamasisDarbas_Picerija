@@ -1,6 +1,6 @@
 package lt.academy.javau5.pizza._security.configuration;
 
-import lt.academy.javau5.pizza._security.tokens.TokenRepository;
+import lt.academy.javau5.pizza._security.repositories.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

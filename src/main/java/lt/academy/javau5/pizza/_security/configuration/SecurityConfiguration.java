@@ -38,13 +38,19 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(POST,
-                                "/api/v1/auth/register"
+                        .requestMatchers(POST
+                                ,"/api/v1/auth/register"
                                 ,"/api/v1/auth/login"
-                                ,"/api/v1/auth/refresh-token"
+                                ,"/api/v1/s/**"
                         ).permitAll()
+                        .requestMatchers(GET
+                                ,"/api/v1/auth/role"
+                        ).authenticated()
+                        .requestMatchers(POST
+                                ,"/api/v1/auth/refresh-token"
+                        ).authenticated()
                         .requestMatchers("/api/pizza/**").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
 //                        .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
 //                        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
 //                        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())

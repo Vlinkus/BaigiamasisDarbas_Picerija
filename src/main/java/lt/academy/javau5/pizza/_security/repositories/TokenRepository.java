@@ -1,10 +1,12 @@
-package lt.academy.javau5.pizza._security.tokens;
+package lt.academy.javau5.pizza._security.repositories;
 
 import java.util.List;
 import java.util.Optional;
+
+import lt.academy.javau5.pizza._security.entities.Token;
+import lt.academy.javau5.pizza._security.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface TokenRepository extends JpaRepository<Token, Integer> {
   @Query(value = """
@@ -15,4 +17,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
   List<Token> findAllValidTokenByUser(Integer id);
 
   Optional<Token> findByToken(String token);
+
+  @Query("SELECT t.user FROM Token t WHERE t.token = :token")
+  Optional<User> getUserByToken(String token);
 }
