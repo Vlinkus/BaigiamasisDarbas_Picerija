@@ -8,8 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
 import lt.academy.javau5.pizza._security.dto_response.*;
+import lt.academy.javau5.pizza._security.entities.Token;
+import lt.academy.javau5.pizza._security.entities.User;
+import lt.academy.javau5.pizza._security.services.HttpResponseService;
 import lt.academy.javau5.pizza._security.services.TokenService;
 import lt.academy.javau5.pizza._security.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +26,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -61,7 +67,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AbstractResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
@@ -71,40 +77,5 @@ public class AuthenticationController {
             HttpServletResponse response
     ) throws IOException {
         authService.refreshToken(request, response);
-    }
-
-    @GetMapping("/role")
-//    @ResponseBody
-    public ResponseEntity<AbstractResponse> roleQuery(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        HttpStatus status;
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ") ) {
-            status = HttpStatus.UNAUTHORIZED;
-            return ResponseEntity.status( status )
-                    .body(new ErrorResponse( status.value() ,"Bad credentials"));
-        }
-
-        String jwt = authHeader.substring(7);
-        var storedToken = tokenService.findByToken(jwt)
-                .orElse(null);
-        if (storedToken == null) {
-            status = HttpStatus.UNAUTHORIZED;
-            return ResponseEntity.status( status )
-                    .body(new ErrorResponse( status.value() ,"Token not found"));
-        } else {
-            return ResponseEntity.ok(new MsgResponse(storedToken.getToken()));
-        }
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication != null && authentication.getCredentials() instanceof String) {
-//            Jwt jwt = (Jwt) authentication.getPrincipal();
-//            String token = (String) authentication.getCredentials();
-//
-//            // You can include the token in the response
-//            return "This is a secure endpoint. Token: " + token;
-//            //return tokenService.getUserByToken(token).get().getRole().toString();
-//        }
-//        return "Access denied.";
     }
 }

@@ -14,13 +14,13 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static lt.academy.javau5.pizza._security.entities.Permission.*;
 import static lt.academy.javau5.pizza._security.entities.Role.*;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 
 import javax.sql.DataSource;
 
@@ -35,22 +35,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable
-                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(POST
-                                ,"/api/v1/auth/register"
-                                ,"/api/v1/auth/login"
-                                ,"/api/v1/s/**"
-                        ).permitAll()
-                        .requestMatchers(GET
-                                ,"/api/v1/auth/role"
-                        ).authenticated()
-                        .requestMatchers(POST
-                                ,"/api/v1/auth/refresh-token"
-                        ).authenticated()
+                        .requestMatchers(OPTIONS, "/**").permitAll() // Allow preflight requests (CORS)
+                        .requestMatchers("/api/v1/auth/register").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/refresh-token").permitAll()
+
+                        .requestMatchers("/api/v2/hello").authenticated()
+                        .requestMatchers("/api/v2/role").permitAll()
                         .requestMatchers("/api/pizza/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
 //                        .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
 //                        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
 //                        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())

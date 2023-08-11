@@ -18,6 +18,6 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 
   Optional<Token> findByToken(String token);
 
-  @Query("SELECT t.user FROM Token t WHERE t.token = :token")
+  @Query("SELECT t.user FROM Token t JOIN t.user u WHERE t.token = :token")
   Optional<User> getUserByToken(String token);
 }

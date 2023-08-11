@@ -13,6 +13,8 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
+    public Optional<User> getById(Long id) { return repo.findById(id); }
+
     public Optional<User> getByEmail(String email) { return repo.findByEmail(email); }
 
     public Optional<User> getByUsername(String email) { return repo.findByEmail(email); }

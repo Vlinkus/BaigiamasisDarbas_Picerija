@@ -3,7 +3,10 @@ package lt.academy.javau5.pizza._security.authentication;
 import lt.academy.javau5.pizza._security.configuration.JwtService;
 import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
+import lt.academy.javau5.pizza._security.dto_response.AbstractResponse;
 import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
+import lt.academy.javau5.pizza._security.dto_response.BroadAuthenticationResponse;
+import lt.academy.javau5.pizza._security.dto_response.MapResponse;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.entities.Token;
 import lt.academy.javau5.pizza._security.repositories.TokenRepository;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +41,8 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole() == null ? Role.USER : request.getRole())
+                .password( passwordEncoder.encode(request.getPassword()) )
+                .role( request.getRole() == null ? Role.USER : request.getRole() )
                 .build();
 
         var savedUser = repository.save(user);
@@ -51,7 +55,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AbstractResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -64,9 +68,11 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
+        return BroadAuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .role(user.getRole().name())
+                .password(user.getPassword())
                 .build();
     }
 
@@ -98,14 +104,14 @@ public class AuthenticationService {
     ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String userEmail;
+        final String username;
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
+        username = jwtService.extractUsername(refreshToken);
+        if (username != null) {
+            var user = this.repository.findByUsername(username)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
