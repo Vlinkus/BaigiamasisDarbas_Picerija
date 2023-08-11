@@ -16,9 +16,9 @@ import lt.academy.javau5.pizza.repositories.ProductRepository;
 
 @Service
 public class PizzaService {
-	
+
 	@Autowired
-	private PizzaRepository pizzaRepository;	
+	private PizzaRepository pizzaRepository;
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -32,11 +32,11 @@ public class PizzaService {
 	}
 
 	public Pizza save(Pizza thePizza) throws PizzaAlreadyExistException, NullCanNotBeSavedException {
-			isPizzaFieldsCorrectForSaving(thePizza);
-			List<Product> productsInPizza = checkIfAllProductsInPizzaAreSavedInDataBase(thePizza);	
-			thePizza.setProducts(productsInPizza);
-			return pizzaRepository.save(thePizza);
-	}	
+		isPizzaFieldsCorrectForSaving(thePizza);
+		List<Product> productsInPizza = checkIfAllProductsInPizzaAreSavedInDataBase(thePizza);
+		thePizza.setProducts(productsInPizza);
+		return pizzaRepository.save(thePizza);
+	}
 
 	public Pizza update(Pizza pizza) {
 		if (pizza == null || pizza.getId() == null)
@@ -60,9 +60,7 @@ public class PizzaService {
 		pizza.setPizzaPhoto(photoBytes);
 		pizzaRepository.save(pizza);
 	}
-	
-	//Methods
-	
+
 	public List<Product> checkIfAllProductsInPizzaAreSavedInDataBase(Pizza piza) {
 		List<Product> products = productRepository.findAll();
 		List<Product> productsInPizza = new ArrayList<>();
@@ -72,33 +70,35 @@ public class PizzaService {
 						.findFirst().orElse(null);
 				if (productFromDB != null)
 					productsInPizza.add(productFromDB);
-				else { if(p.getProductPrice() == null) p.setProductPrice(2.5);
+				else {
+					if (p.getProductPrice() == null)
+						p.setProductPrice(2.5);
 					productsInPizza.add(productRepository.save(p));
 				}
 			});
 		}
 		return productsInPizza;
 	}
-	
+
 	private void isPizzaFieldsCorrectForSaving(Pizza thePizza) {
 		if (thePizza == null || thePizza.getPizzaName() == null || thePizza.getPizzaName() == "") {
 			throw new NullCanNotBeSavedException("Empty pizza can not be saved");
-		} else { 
-				Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
+		} else {
+			Pizza pizza = pizzaRepository.findPizzaByPizzaName(thePizza.getPizzaName()).orElse(null);
+			if (pizza != null)
+				throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
+			if (thePizza.getId() != null) {
+				pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
 				if (pizza != null)
-					throw new PizzaAlreadyExistException("Pizza with name: " + thePizza.getPizzaName() + " already exists");
-				if (thePizza.getId() != null) {
-					pizza = pizzaRepository.findById(thePizza.getId()).orElse(null);
-					if (pizza != null)
-						throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
-				}
+					throw new PizzaAlreadyExistException("Pizza with ID: " + thePizza.getId() + " already exists");
 			}
+		}
 	}
-	
+
 	private Pizza findPizzaByIdOrThrowException(Integer pizzaId) {
 		Pizza pizza = pizzaRepository.findById(pizzaId)
 				.orElseThrow(() -> new PizzaDoesNotExistException("Pizza with ID: " + pizzaId + " does  not exist"));
 		return pizza;
 	}
-	
+
 }

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +55,7 @@ public class ProductServiceTests {
 	public void testFindProductById() {
 		// Arrange
 		int productId = 1;
-		Optional<Product> product1 = Optional.of(new Product(1,"Agurkai", 10.0, null));
+		Optional<Product> product1 = Optional.of(new Product(1, "Agurkai", 10.0, null));
 		when(repo.findById(productId)).thenReturn(product1);
 		// Act
 		Product returnedProduct = service.findById(productId);
@@ -66,7 +65,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void testSaveProductToRepository(){
+	public void testSaveProductToRepository() {
 		// Arrange
 		Product product1 = new Product("Agurkai", 10);
 		// Act
@@ -74,36 +73,36 @@ public class ProductServiceTests {
 		// Assert
 		verify(repo).save(product1);
 	}
-	
+
 	@Test
-	public void testUpdateProductToRepository(){
+	public void testUpdateProductToRepository() {
 		// Arrange
 		int id = 1;
-		Optional<Product> existingProduct =Optional.of(new Product(id,"Agurkai", 10.0, null));
-		Product product = new Product(id,"Agurkai", 10.0, null);
+		Optional<Product> existingProduct = Optional.of(new Product(id, "Agurkai", 10.0, null));
+		Product product = new Product(id, "Agurkai", 10.0, null);
 		when(repo.findById(id)).thenReturn(existingProduct);
 		// Assert
 		service.update(product);
 		// Assert
 		verify(repo).save(product);
 	}
-	
+
 	@Test
 	public void testDeleteProductFromRepo() {
 		// Arrange
 		int id = 1;
-		Optional<Product> product = Optional.of( new Product(1, "Agurkai", 10.0, null));
-		Product prod =product.get();
+		Optional<Product> product = Optional.of(new Product(1, "Agurkai", 10.0, null));
+		Product prod = product.get();
 		when(repo.findById(id)).thenReturn(product);
 		// Act
 		String result = service.delete(id);
 		// Assert
-		Assertions.assertEquals("Product Deleted Succesfully",result);
+		Assertions.assertEquals("Product Deleted Succesfully", result);
 		verify(repo).delete(prod);
 	}
-	
+
 	@Test
-	public void testTrySaveProductWithExistingName(){
+	public void testTrySaveProductWithExistingName() {
 		// Arrange
 		String productName = "Agurkai";
 		Product product = new Product(1, productName, 10.0, null);
@@ -115,32 +114,33 @@ public class ProductServiceTests {
 		}, "Product with this name already exist");
 		verify(repo, never()).save(any());
 	}
+
 	@Test
-	public void testTrySaveProductWithNameNull(){
+	public void testTrySaveProductWithNameNull() {
 		// Arrange
 		Product product = new Product(1, null, 10.0, null);
 		// Assert
 		Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
 			service.save(product);
 		}, "Empty product can not be saved");
-		
+
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTrySaveProductWithNameEmpty(){
+	public void testTrySaveProductWithNameEmpty() {
 		// Arrange
 		Product product = new Product("", 10.0);
 		// Assert
 		Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
 			service.save(product);
 		}, "Empty product can not be saved");
-		
+
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTrySaveProductAsNull(){
+	public void testTrySaveProductAsNull() {
 		// Arrange
 		Product product = null;
 		// Assert
@@ -149,24 +149,24 @@ public class ProductServiceTests {
 		}, "Empty product can not be saved");
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTrySaveProductWithExistingId(){
+	public void testTrySaveProductWithExistingId() {
 		// Arrange
 		int id = 1;
-		Optional<Product> existingProduct =Optional.of( new Product(id, "Agurkai", 10.0, null));
+		Optional<Product> existingProduct = Optional.of(new Product(id, "Agurkai", 10.0, null));
 		Product product = new Product(id, "Pomidorai", 10.0, null);
 		when(repo.findById(id)).thenReturn(existingProduct);
 		// Assert
 		Assertions.assertThrows(ProductAlreadyExistException.class, () -> {
 			service.save(product);
 		}, "Product with ID:" + id + "id already exist");
-		
+
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTryUpdateProductAsNull(){
+	public void testTryUpdateProductAsNull() {
 		// Arrange
 		Product product = null;
 		// Assert
@@ -175,31 +175,31 @@ public class ProductServiceTests {
 		}, "Product can not be updated");
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTryUpdateProductWithProductNameNull(){
+	public void testTryUpdateProductWithProductNameNull() {
 		// Arrange
-		Product product = new Product(1,null, 10.0,null);
+		Product product = new Product(1, null, 10.0, null);
 		// Assert
 		Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
 			service.update(product);
 		}, "Product can not be updated with empty name");
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTryUpdateProductWithProductNameEmpty(){
+	public void testTryUpdateProductWithProductNameEmpty() {
 		// Arrange
-		Product product = new Product(1,"", 10.0,null);
+		Product product = new Product(1, "", 10.0, null);
 		// Assert
 		Assertions.assertThrows(NullCanNotBeSavedException.class, () -> {
 			service.update(product);
 		}, "Product can not be updated with empty name");
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTryUpdateProductWithoutId(){
+	public void testTryUpdateProductWithoutId() {
 		// Arrange
 		Product product = new Product("Agurkai", 10.0);
 		// Assert
@@ -208,13 +208,13 @@ public class ProductServiceTests {
 		}, "Product can not be updated");
 		verify(repo, never()).save(any());
 	}
-	
+
 	@Test
-	public void testTryUpdateProductWithIdThatDoesNotExist(){
+	public void testTryUpdateProductWithIdThatDoesNotExist() {
 		// Arrange
 		int id = 1;
-		Optional<Product> existingProduct =Optional.of(new Product(id,"Agurkai", 10.0, null));
-		Product product = new Product(2,"Pomidorai", 10.0, null);
+		Optional<Product> existingProduct = Optional.of(new Product(id, "Agurkai", 10.0, null));
+		Product product = new Product(2, "Pomidorai", 10.0, null);
 		when(repo.findById(id)).thenReturn(existingProduct);
 		// Assert
 		Assertions.assertThrows(ProductDoesNotExistExecption.class, () -> {
@@ -222,21 +222,20 @@ public class ProductServiceTests {
 		}, "Product can not be updated");
 		verify(repo, never()).save(any());
 	}
-	
-	@Test
-	public void testTryDeleteProductThatIsUsedInAnyPizza(){
-		// Arrange
-        int productId = 1;
-        List<Pizza> pizzas = Arrays.asList(new Pizza(1, "Pizza",null,10.0,32,null,null));
-        Product product = new Product(productId, "Cheese", 5.0, pizzas );
-        when(repo.findById(productId)).thenReturn(Optional.of(product));
-        // Act and Assert
-        Assertions.assertThrows(ProductIsStillUsedInSomePizzaException.class, () -> {
-            service.delete(productId);
-        }, "Product with ID: " + productId + " is associated with other entities and cannot be deleted");
-        verify(repo, times(1)).findById(productId);
-        verify(repo, never()).delete(product);
-	}
 
+	@Test
+	public void testTryDeleteProductThatIsUsedInAnyPizza() {
+		// Arrange
+		int productId = 1;
+		List<Pizza> pizzas = Arrays.asList(new Pizza(1, "Pizza", null, 10.0, 32, null, null));
+		Product product = new Product(productId, "Cheese", 5.0, pizzas);
+		when(repo.findById(productId)).thenReturn(Optional.of(product));
+		// Act and Assert
+		Assertions.assertThrows(ProductIsStillUsedInSomePizzaException.class, () -> {
+			service.delete(productId);
+		}, "Product with ID: " + productId + " is associated with other entities and cannot be deleted");
+		verify(repo, times(1)).findById(productId);
+		verify(repo, never()).delete(product);
+	}
 
 }

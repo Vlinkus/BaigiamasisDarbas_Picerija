@@ -31,20 +31,13 @@ public class Order {
 	@JoinTable(name = "pizza_orders_pizza", joinColumns = @JoinColumn(name = "pizza_orders_id"), inverseJoinColumns = @JoinColumn(name = "pizza_id"))
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private List<Pizza> pizzas;
-	
-//	Todo
-//	@Column(name = "custom_pizza")
-//	private List<CustomPizza> customPizza;
 
 	@Column(name = "pizza_orders_price")
 	private double price;
-	
-//	ToDo
-//	User ManyToMany relationship
-	
+
 	public Order(List<Pizza> pizzas, double price) {
 		this.pizzas = pizzas;
 		this.price = price;
-	}		
+	}
 
 }
