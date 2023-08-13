@@ -32,4 +32,6 @@ public class UserService {
     public boolean hasEmail(String email) { return repo.existsByEmail(email); }
 
     public boolean hasUsername(String username) { return repo.existsByUsername(username); }
+
+    public Optional<User> findByUsername(String username) { return repo.findByUsername(username);}
 }

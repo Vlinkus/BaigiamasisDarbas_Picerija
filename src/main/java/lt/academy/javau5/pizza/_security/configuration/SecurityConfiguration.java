@@ -23,6 +23,7 @@ import static lt.academy.javau5.pizza._security.entities.Role.*;
 import static org.springframework.http.HttpMethod.*;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -36,8 +37,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(OPTIONS, "/**").permitAll() // Allow preflight requests (CORS)
+                        // Allow preflight requests for Cross Origin Resource Sharing (CORS)
+                        // in case if .anyRequest().authenticated()
+                        .requestMatchers(OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/auth/refresh-token").permitAll()
@@ -55,15 +61,13 @@ public class SecurityConfiguration {
 //                        .requestMatchers("/api/**").permitAll()
 //                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(x-> x
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                        .permitAll()
                 );
 
         return http.build();

@@ -1,12 +1,11 @@
-package lt.academy.javau5.pizza._security.authentication;
+package lt.academy.javau5.pizza._security.services;
 
-import lt.academy.javau5.pizza._security.configuration.JwtService;
 import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
 import lt.academy.javau5.pizza._security.dto_response.AbstractResponse;
 import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
 import lt.academy.javau5.pizza._security.dto_response.BroadAuthenticationResponse;
-import lt.academy.javau5.pizza._security.dto_response.MapResponse;
+import lt.academy.javau5.pizza._security.dto_response.ErrorResponse;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.entities.Token;
 import lt.academy.javau5.pizza._security.repositories.TokenRepository;
@@ -16,15 +15,19 @@ import lt.academy.javau5.pizza._security.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Map;
+
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +38,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private long refreshExpiration;
+
+    public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -46,16 +52,16 @@ public class AuthenticationService {
                 .build();
 
         var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
+        var accessToken = jwtService.buildAccessToken(user);
+        var refreshToken = jwtService.buildRefreshToken(user);
+        addRefreshTokenCookie(response, refreshToken);
+        saveUserToken(savedUser, accessToken);
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
+                .accessToken(accessToken)
                 .build();
     }
 
-    public AbstractResponse authenticate(AuthenticationRequest request) {
+    public AbstractResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -64,15 +70,14 @@ public class AuthenticationService {
         );
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var accessToken = jwtService.buildAccessToken(user);
+        var refreshToken = jwtService.buildRefreshToken(user);
         revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+        addRefreshTokenCookie(response, refreshToken);
+        saveUserToken(user, accessToken);
         return BroadAuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
+                .accessToken(accessToken)
                 .role(user.getRole().name())
-                .password(user.getPassword())
                 .build();
     }
 
@@ -98,31 +103,37 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public void refreshToken(
+    public ResponseEntity<AbstractResponse> refreshTokenFromCookie(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String username;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
-        }
-        refreshToken = authHeader.substring(7);
-        username = jwtService.extractUsername(refreshToken);
-        if (username != null) {
-            var user = this.repository.findByUsername(username)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+        String refreshToken = jwtService.extractRefreshTokenFromCookie(request);
+        if (refreshToken != null) {
+            String username = jwtService.extractUsername(refreshToken);
+            if (username != null) {
+                User user = repository.findByUsername(username).orElse(null);
+                if (user != null && jwtService.isTokenValid(refreshToken, user)) {
+                    String accessToken = jwtService.buildAccessToken(user);
+                    String newRefreshToken = jwtService.buildRefreshToken(user);
+                    addRefreshTokenCookie(response, newRefreshToken);
+                    return createTokensResponse(accessToken, user.getRole().name());
+                }
             }
         }
+        return ResponseEntity.status(FORBIDDEN) // status 403
+                .body(new ErrorResponse(FORBIDDEN.value(), "Forbidden"));
+    }
+
+    public void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true); // prevent js from accessing the cookie
+        cookie.setMaxAge((int) (refreshExpiration) / 1000); // cookie's max age within seconds
+        response.addCookie(cookie);
+    }
+
+    private ResponseEntity<AbstractResponse> createTokensResponse(String accessToken, String role) {
+        return ResponseEntity.ok(new BroadAuthenticationResponse(accessToken,role));
+
     }
 }

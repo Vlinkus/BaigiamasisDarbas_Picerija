@@ -18,4 +18,6 @@ public class TokenService {
     }
 
     public Optional<Token> findByToken(String token){ return repo.findByToken(token); }
+
+    public Token save(Token storedToken) { return repo.save(storedToken); }
 }

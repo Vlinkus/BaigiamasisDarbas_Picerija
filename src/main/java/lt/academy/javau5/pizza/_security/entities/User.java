@@ -1,6 +1,5 @@
 package lt.academy.javau5.pizza._security.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

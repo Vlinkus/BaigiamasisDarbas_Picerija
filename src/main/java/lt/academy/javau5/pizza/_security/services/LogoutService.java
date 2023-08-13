@@ -1,5 +1,6 @@
-package lt.academy.javau5.pizza._security.configuration;
+package lt.academy.javau5.pizza._security.services;
 
+import jakarta.servlet.http.Cookie;
 import lt.academy.javau5.pizza._security.repositories.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
-  private final TokenRepository tokenRepository;
+  private final TokenService tokenService;
+  private final JwtService jwtService;
 
   @Override
   public void logout(
@@ -26,12 +28,13 @@ public class LogoutService implements LogoutHandler {
       return;
     }
     jwt = authHeader.substring(7);
-    var storedToken = tokenRepository.findByToken(jwt)
+    var storedToken = tokenService.findByToken(jwt)
         .orElse(null);
     if (storedToken != null) {
       storedToken.setExpired(true);
       storedToken.setRevoked(true);
-      tokenRepository.save(storedToken);
+      tokenService.save(storedToken);
+      jwtService.deleteRefreshTokenCookie(response);
       SecurityContextHolder.clearContext();
     }
   }
