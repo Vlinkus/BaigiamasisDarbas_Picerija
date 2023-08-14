@@ -47,13 +47,7 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-/*                .logout(x-> x
-                        .logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                        .permitAll()
-                )*/;
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
