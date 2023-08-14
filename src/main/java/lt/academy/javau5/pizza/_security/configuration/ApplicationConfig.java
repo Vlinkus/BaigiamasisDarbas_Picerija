@@ -1,7 +1,6 @@
 package lt.academy.javau5.pizza._security.configuration;
 
 import lombok.RequiredArgsConstructor;
-import lt.academy.javau5.pizza._security.repositories.UserRepository;
 import lt.academy.javau5.pizza._security.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

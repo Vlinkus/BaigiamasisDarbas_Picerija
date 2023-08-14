@@ -1,33 +1,32 @@
 package lt.academy.javau5.pizza._security.services;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
-import lt.academy.javau5.pizza._security.dto_response.*;
+import lt.academy.javau5.pizza._security.dto_response.AbstractResponse;
+import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
+import lt.academy.javau5.pizza._security.dto_response.BroadAuthenticationResponse;
+import lt.academy.javau5.pizza._security.dto_response.ErrorResponse;
+import lt.academy.javau5.pizza._security.dto_response.MsgResponse;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.entities.Token;
-import lt.academy.javau5.pizza._security.repositories.TokenRepository;
 import lt.academy.javau5.pizza._security.entities.TokenType;
 import lt.academy.javau5.pizza._security.entities.User;
 import lt.academy.javau5.pizza._security.repositories.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Cookie;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Service
 @RequiredArgsConstructor
