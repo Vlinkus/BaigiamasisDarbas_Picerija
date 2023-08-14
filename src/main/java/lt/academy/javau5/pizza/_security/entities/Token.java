@@ -1,4 +1,4 @@
-package lt.academy.javau5.pizza._security.tokens;
+package lt.academy.javau5.pizza._security.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lt.academy.javau5.pizza._security.entities.User;
 
 @Data
 @Builder

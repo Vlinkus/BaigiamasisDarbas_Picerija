@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse implements AbstractResponse{
+public class BroadAuthenticationResponse implements AbstractResponse{
     @JsonProperty("access_token")
     private String accessToken;
+    private String role;
 }

@@ -1,7 +1,7 @@
 package lt.academy.javau5.pizza._security.configuration;
 
 import lombok.RequiredArgsConstructor;
-import lt.academy.javau5.pizza._security.repositories.UserRepository;
+import lt.academy.javau5.pizza._security.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-
-    private final UserRepository repository;
+    private final UserService userService;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByUsername(username)
+        return username -> userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
