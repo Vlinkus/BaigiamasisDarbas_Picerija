@@ -2,10 +2,7 @@ package lt.academy.javau5.pizza._security.services;
 
 import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
-import lt.academy.javau5.pizza._security.dto_response.AbstractResponse;
-import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
-import lt.academy.javau5.pizza._security.dto_response.BroadAuthenticationResponse;
-import lt.academy.javau5.pizza._security.dto_response.ErrorResponse;
+import lt.academy.javau5.pizza._security.dto_response.*;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.entities.Token;
 import lt.academy.javau5.pizza._security.repositories.TokenRepository;
@@ -18,22 +15,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository repository;
-    private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -81,6 +81,29 @@ public class AuthenticationService {
                 .build();
     }
 
+    public ResponseEntity<AbstractResponse> logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+            var storedToken = tokenService.findByToken(jwt)
+                    .orElse(null);
+            if (storedToken != null) {
+                storedToken.setExpired(true);
+                storedToken.setRevoked(true);
+                tokenService.save(storedToken);
+            }
+        }
+
+        jwtService.deleteRefreshTokenCookie(response);
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok(new MsgResponse("Ok"));
+    }
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -89,18 +112,18 @@ public class AuthenticationService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepository.save(token);
+        tokenService.save(token);
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        var validUserTokens = tokenService.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
         });
-        tokenRepository.saveAll(validUserTokens);
+        tokenService.saveAll(validUserTokens);
     }
 
     public ResponseEntity<AbstractResponse> refreshTokenFromCookie(

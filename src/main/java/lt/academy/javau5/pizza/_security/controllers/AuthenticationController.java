@@ -14,6 +14,8 @@ import lt.academy.javau5.pizza._security.services.JwtService;
 import lt.academy.javau5.pizza._security.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,11 +50,22 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.authenticate(request, response));
     }
 
-    @PostMapping("/refresh-token")
+    @GetMapping("/refresh-token")
     public ResponseEntity<AbstractResponse> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
         return authService.refreshTokenFromCookie(request, response);
+    }
+
+    // not working wothout @CrossOrigin anotation
+    // even with global CORS configuration in CorsConfig.java
+    @CrossOrigin
+    @GetMapping("/logout")
+    public ResponseEntity<AbstractResponse> logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.logout(request, response);
     }
 }

@@ -6,6 +6,7 @@ import lt.academy.javau5.pizza._security.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,4 +21,10 @@ public class TokenService {
     public Optional<Token> findByToken(String token){ return repo.findByToken(token); }
 
     public Token save(Token storedToken) { return repo.save(storedToken); }
+
+    public List<Token> saveAll(List<Token> tokens) { return repo.saveAll(tokens); }
+
+    public List<Token> findAllValidTokenByUser(Integer id) {return repo.findAllValidTokenByUser(id); }
+
+
 }
