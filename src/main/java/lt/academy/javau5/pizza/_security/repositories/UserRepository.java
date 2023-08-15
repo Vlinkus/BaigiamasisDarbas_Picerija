@@ -4,9 +4,18 @@ import lt.academy.javau5.pizza._security.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import lt.academy.javau5.pizza._security.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
+
+/**
+ * Repository for {@link User} entity
+ * @see UserService
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 3 Aug 2023
+ * @author Maksim Pavlenko
+ */
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

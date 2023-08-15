@@ -1,6 +1,5 @@
 package lt.academy.javau5.pizza._security.services;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -8,14 +7,12 @@ import lt.academy.javau5.pizza._security.dto_request.AuthenticationRequest;
 import lt.academy.javau5.pizza._security.dto_request.RegisterRequest;
 import lt.academy.javau5.pizza._security.dto_response.AbstractResponse;
 import lt.academy.javau5.pizza._security.dto_response.AuthenticationResponse;
-import lt.academy.javau5.pizza._security.dto_response.BroadAuthenticationResponse;
 import lt.academy.javau5.pizza._security.dto_response.ErrorResponse;
 import lt.academy.javau5.pizza._security.dto_response.MsgResponse;
 import lt.academy.javau5.pizza._security.entities.Role;
 import lt.academy.javau5.pizza._security.entities.Token;
 import lt.academy.javau5.pizza._security.entities.TokenType;
 import lt.academy.javau5.pizza._security.entities.User;
-import lt.academy.javau5.pizza._security.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,10 +25,17 @@ import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
+/**
+ * Service responsible for handling user authentication,
+ * registration, and token management.
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 3 Aug 2023
+ * @author Maksim Pavlenko
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository repository;
+    private final UserService userService;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -40,6 +44,15 @@ public class AuthenticationService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
+    /**
+     * &ensp; Registers a new user with the provided registration details and issues
+     * an <i><b>access token</b></i> in a JSON body and
+     * a <i><b>refresh token</b></i> in the form of an HttpOnly cookie upon successful registration.
+     *
+     * @param request  The registration request containing user details.
+     * @param response The HTTP response object for setting the refresh token cookie.
+     * @return An instance of {@link AuthenticationResponse} containing the access token.
+     */
     public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         var user = User.builder()
                 .firstname(request.getFirstname())
@@ -50,16 +63,25 @@ public class AuthenticationService {
                 .role( request.getRole() == null ? Role.USER : request.getRole() )
                 .build();
 
-        var savedUser = repository.save(user);
+        var savedUser = userService.save(user);
         var accessToken = jwtService.buildAccessToken(user);
         var refreshToken = jwtService.buildRefreshToken(user);
-        addRefreshTokenCookie(response, refreshToken);
+        jwtService.addRefreshTokenCookie(response, refreshToken);
         saveUserToken(savedUser, accessToken);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
+                .role(user.getRole().name())
                 .build();
     }
 
+    /**
+     * &ensp; Authenticates a user based on the provided
+     * authentication request and issues new access and refresh tokens.
+     *
+     * @param request  The authentication request containing user credentials.
+     * @param response The HTTP response object for setting the refresh token cookie.
+     * @return An instance of {@link AuthenticationResponse} containing the new access token.
+     */
     public AbstractResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -67,19 +89,27 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByUsername(request.getUsername())
+        var user = userService.findByUsername(request.getUsername())
                 .orElseThrow();
         var accessToken = jwtService.buildAccessToken(user);
         var refreshToken = jwtService.buildRefreshToken(user);
         revokeAllUserTokens(user);
-        addRefreshTokenCookie(response, refreshToken);
+        jwtService.addRefreshTokenCookie(response, refreshToken);
         saveUserToken(user, accessToken);
-        return BroadAuthenticationResponse.builder()
+        return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .role(user.getRole().name())
                 .build();
     }
 
+    /**
+     * &ensp; Logs out the authenticated user and deletes the refresh token HttpOnly cookie.
+     * In case if the request contained an <i><b>"Authorization"</b></i> header with <i><b>"Bearer + JWT token"</b></i> - invalidates their tokens.
+     *
+     * @param request  The HTTP request object for accessing the authorization header.
+     * @param response The HTTP response object for deleting the refresh token cookie.
+     * @return A {@link ResponseEntity} with an instance of {@link MsgResponse} indicating a successful logout.
+     */
     public ResponseEntity<AbstractResponse> logout(
             HttpServletRequest request,
             HttpServletResponse response
@@ -97,12 +127,19 @@ public class AuthenticationService {
                 tokenService.save(storedToken);
             }
         }
-
         jwtService.deleteRefreshTokenCookie(response);
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok(new MsgResponse("Ok"));
     }
 
+    /**
+     * Saves a new user token in the database, allowing the user to be authenticated
+     * for subsequent requests. The token is associated with the provided user and
+     * contains necessary information for secure communication.
+     *
+     * @param user      The user for whom the token is generated.
+     * @param jwtToken  The access token generated for the user.
+     */
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -114,6 +151,13 @@ public class AuthenticationService {
         tokenService.save(token);
     }
 
+    /**
+     * Revokes and marks as expired all tokens associated with the provided user.
+     * This method is used during logout or when refreshing tokens to ensure that
+     * previous tokens become invalid and cannot be used for unauthorized access.
+     *
+     * @param user  The user whose tokens are to be revoked.
+     */
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenService.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
@@ -125,6 +169,16 @@ public class AuthenticationService {
         tokenService.saveAll(validUserTokens);
     }
 
+    /**
+     * Refreshes the access token using the refresh token stored in the HttpOnly cookie. If the refresh token is valid,
+     * a new access token is generated and a new refresh token is issued and stored in the HttpOnly cookie.
+     *
+     * @param request  The HTTP request object for accessing the refresh token cookie.
+     * @param response The HTTP response object for setting the new refresh token cookie.
+     * @return A {@link ResponseEntity} containing an instance of {@link AuthenticationResponse} with the new access token,
+     * or an {@link ErrorResponse} indicating a 403 forbidden status.
+     * @throws IOException If an I/O error occurs while handling the response.
+     */
     public ResponseEntity<AbstractResponse> refreshTokenFromCookie(
             HttpServletRequest request,
             HttpServletResponse response
@@ -133,11 +187,11 @@ public class AuthenticationService {
         if (refreshToken != null) {
             String username = jwtService.extractUsername(refreshToken);
             if (username != null) {
-                User user = repository.findByUsername(username).orElse(null);
+                User user = userService.findByUsername(username).orElse(null);
                 if (user != null && jwtService.isTokenValid(refreshToken, user)) {
                     String accessToken = jwtService.buildAccessToken(user);
                     String newRefreshToken = jwtService.buildRefreshToken(user);
-                    addRefreshTokenCookie(response, newRefreshToken);
+                    jwtService.addRefreshTokenCookie(response, newRefreshToken);
                     return createTokensResponse(accessToken, user.getRole().name());
                 }
             }
@@ -146,16 +200,15 @@ public class AuthenticationService {
                 .body(new ErrorResponse(FORBIDDEN.value(), "Forbidden"));
     }
 
-    public void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true); // prevent js from accessing the cookie
-        cookie.setMaxAge((int) (refreshExpiration) / 1000); // cookie's max age within seconds
-        response.addCookie(cookie);
-    }
-
+    /**
+     * Creates a ResponseEntity containing an instance of {@link AuthenticationResponse} with the provided access token and role.
+     *
+     * @param accessToken The new access token.
+     * @param role        The user's role.
+     * @return A {@link ResponseEntity} with the new access token and role encapsulated in an instance of {@link AuthenticationResponse}.
+     */
     private ResponseEntity<AbstractResponse> createTokensResponse(String accessToken, String role) {
-        return ResponseEntity.ok(new BroadAuthenticationResponse(accessToken,role));
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken,role));
 
     }
 }

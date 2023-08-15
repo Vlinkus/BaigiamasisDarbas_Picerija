@@ -5,6 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO representing an {@link #error} response
+ * with HTTP {@link #status} code and error message.
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 4 Aug 2023
+ * @author Maksim Pavlenko
+ */
+
 @Data
 @Builder
 @AllArgsConstructor

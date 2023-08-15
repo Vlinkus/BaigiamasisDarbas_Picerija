@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<AbstractResponse> checkRole(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (responseService.isBearer(authHeader))
-            return responseService.error(UNAUTHORIZED,"Bad credentials 1");
+            return responseService.error(UNAUTHORIZED,"Bad credentials");
 
         String jwt = authHeader.substring(7);
         Token token = tokenService.findByToken(jwt).orElse(null);
@@ -44,7 +44,7 @@ public class UserController {
 
         User user = tokenService.getUserByToken(jwt).orElse(null);
         if (user == null)
-            return responseService.error(UNAUTHORIZED,"Bad credentials 2");
+            return responseService.error(UNAUTHORIZED,"Bad credentials");
 
         String role = user.getRole().name();
         return responseService.msg(role) ;

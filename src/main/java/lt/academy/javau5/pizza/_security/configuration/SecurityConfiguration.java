@@ -17,40 +17,69 @@ import javax.sql.DataSource;
 
 import static org.springframework.http.HttpMethod.OPTIONS;
 
+/**
+ * This class configures the security for the application.
+ *
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 4 Aug 2023
+ * @author Maksim Pavlenko
+ */
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-/*    private final LogoutHandler logoutHandler;*/
+
+    /**
+     * Configures the security filter chain with custom settings.
+     *
+     * @param http The HttpSecurity object to configure security settings.
+     * @return The configured SecurityFilterChain instance.
+     * @throws Exception If an error occurs while configuring security.
+     */
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow preflight requests for Cross Origin Resource Sharing (CORS)
-                        // in case if .anyRequest().authenticated()
+                        // in case if .anyRequest() is set to .authenticated()
                         .requestMatchers(OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/v1/auth/register").permitAll()
-                        .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/auth/refresh-token").permitAll()
-                        .requestMatchers("/api/v1/auth/logout").permitAll()
-
-                        .requestMatchers("/api/v2/hello").authenticated()
-                        .requestMatchers("/api/v2/role").permitAll()
+                        .requestMatchers(
+                                "**",
+                                "/v2/api-docs",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        .requestMatchers("/user/").authenticated()
                         .requestMatchers("/api/pizza/**").permitAll()
                         .anyRequest().permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+    /**
+     * Creates and configures a UserDetailsManager bean for managing user details.
+     *
+     * @param dataSource The DataSource to retrieve user details from the database.
+     * @return The configured UserDetailsManager instance.
+     */
 
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {

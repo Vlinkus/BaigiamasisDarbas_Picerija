@@ -11,6 +11,13 @@ import java.util.stream.Collectors;
 
 import static lt.academy.javau5.pizza._security.entities.Permission.*;
 
+/**
+ * Role enum used in {@link User} entity
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 3 Aug 2023
+ * @author Maksim Pavlenko
+ */
+
 @RequiredArgsConstructor
 public enum Role {
 

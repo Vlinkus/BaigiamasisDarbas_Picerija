@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Controller
-@RequestMapping("/api/pizza/image")
+//@Controller
+//@RequestMapping("/api/pizza/image")
 public class PizzaImageController {
 
 //    @GetMapping(value = "/{name:.+}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

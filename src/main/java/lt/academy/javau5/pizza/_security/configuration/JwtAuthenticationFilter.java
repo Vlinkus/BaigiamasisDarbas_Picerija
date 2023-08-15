@@ -19,6 +19,22 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * <p>&emsp;Custom filter responsible for JWT authentication.
+ * This filter intercepts incoming requests and validates JWT tokens, setting the
+ * authenticated user in the Spring Security context if the token is valid.</p>
+ *
+ * <p>&emsp;The filter is designed to be invoked once per request. It extracts the JWT token
+ * from the request's "Authorization" header, validates its signature and expiration,
+ * and if valid, loads the associated user details from the UserDetailsService and sets
+ * the user in the SecurityContextHolder. The token's validity is also checked against
+ * the TokenService to ensure it has not been revoked or expired.</p>
+ *
+ * @version 1.0, 15 Aug 2023
+ * @since 1.0, 3 Aug 2023
+ * @author Maksim Pavlenko
+ */
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,12 +42,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final JwtService jwtService;
 
+    /**
+     * Performs <i><b>JWT</b></i> authentication and authorization logic for incoming requests.
+     *
+     * @param request     The HttpServletRequest representing the incoming request.
+     * @param response    The HttpServletResponse representing the response.
+     * @param filterChain The FilterChain to proceed with the filtered request.
+     * @throws ExpiredJwtException If the JWT has expired.
+     * @throws ServletException If an exception occurs during servlet processing.
+     * @throws IOException      If an I/O exception occurs.
+     */
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) throws ExpiredJwtException, ServletException, IOException {
         if (request.getServletPath().contains("/api/v1/auth")) {
             filterChain.doFilter(request, response);
             return;
