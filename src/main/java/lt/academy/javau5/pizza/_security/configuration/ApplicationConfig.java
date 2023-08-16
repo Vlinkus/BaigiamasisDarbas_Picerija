@@ -20,8 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * retrieval, passwordencoding, authentication provider,
  * and authentication manager.</p>
  *
- * @since 1.0, 15 Aug 2023
- * @version 1.0, 3 Aug 2023
+ * @since 1.0, 3 Aug 2023
+ * @version 1.0, 15 Aug 2023
  * @see UserDetailsService
  * @see AuthenticationProvider
  * @see AuthenticationManager

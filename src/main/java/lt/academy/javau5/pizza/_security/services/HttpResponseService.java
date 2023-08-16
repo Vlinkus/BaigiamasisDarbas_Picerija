@@ -132,9 +132,8 @@ public class HttpResponseService {
      * @author Maksim Pavlenko
      */
     public ResponseEntity<AbstractResponse> isRegRequestValid(BindingResult bindingResult) {
-        HttpStatus status;
         if (bindingResult.hasFieldErrors() || bindingResult.hasGlobalErrors()) {
-            status = NOT_ACCEPTABLE; // status 406
+            HttpStatus status = NOT_ACCEPTABLE; // status 406
             List<ObjectError> err = bindingResult.getAllErrors();
             Set<String> errorResponse = new HashSet<>();
             for (ObjectError x: err)

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO representing the authentication request
- * containing <b>username</b> and <b>password</b>.
+ * containing {@link #username} and {@link #password}.
  * This object is sent from the client to the
  * backend for logging into an account.
  * @version 1.0, 15 Aug 2023
