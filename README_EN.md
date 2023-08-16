@@ -62,7 +62,7 @@ The Stack used in the REST server:
 
 Before you go on, make sure you have at least ***JDK 17*** installed on your system
 
-## getting the repository
+## Getting the repository
 
 To get this repository, just got to the local folder where you would like to store it and run the git clone command:
 
@@ -88,12 +88,12 @@ This project is backed by OpenAPI 3 documentation.
 If you are interested to analyse the endpoints in detail and know all the possible responses, headers and cookies, 
 feel free to go to the swagger-ui default page: http://localhost:8080/swagger-ui/index.html
 
-### authentication and authorization
+### Authentication and authorization
 
 To start, you will need to create an account. 
 If you are running just the REST server, the best choice for you will be running Postman or any other alternative.
 
-#### registration
+#### Registration
 Registering an account is pretty straight forward process:
 - Set *HTTP* request to ``POST``
 - Set the address to ``localhost:8080/api/v1/auth/register``
@@ -114,7 +114,7 @@ in which case the default role for registering user will be "USER".
 
 All the possible role variations: `USER`, `MANAGER`, `ADMIN`
 
-#### login - authentication
+#### Login - authentication
 Logging in requires only two fields.
 - Set *HTTP* request to ``POST``
 - Set the address to ``localhost:8080/api/v1/auth/login``
@@ -128,8 +128,7 @@ Logging in requires only two fields.
 After a successful authentication, you will receive a ***JWT access token***, 
 user's ***role*** and a ***HttpOnly refresh token cookie***. 
 
-
-#### logout
+#### Logout
 Logging out is a simple process:
 
 - Have a valid ``HttpOnly JWT refresh token``.
@@ -140,7 +139,7 @@ Logging out is a simple process:
 The logout API allows users to terminate their session and invalidate the access token if present. 
 This prevents the both tokens from being used for any further authorization requests.
 
-#### refresh token
+#### Refresh token
 Refreshing the access token is a part of the token-based authentication flow. 
 JWT access token has a short lifespan, thus require to be refreshed with the help of ***refresh token***:
 

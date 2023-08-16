@@ -89,13 +89,13 @@ Visose su api susijusiose nuorodose šiuose poskyriuose bus naudojamas anksčiau
 Jei norite išsamiai išanalizuoti galinius taškus ir sužinoti visus galimus atsakymus, antraštes ir slapukus,
 maloniai prašome apsilankyti numatytojo swagger-ui puslapyje: http://localhost:8080/swagger-ui/index.html
 
-### autentikacija ir autorizacija
+### Autentikacija ir autorizacija
 
 Norėdami pradėti, turite susikurti paskyrą.
 Jei naudojate tik REST serverį,
 geriausias pasirinkimas bus Postman arba bet kuri kita alternatyva.
 
-#### registracija
+#### Registracija
 Paskyros registravimas yra gana paprastas procesas:
 - Nustatyti *HTTP* užklausą į ``POST``
 - Nustatyti adresą ``localhost:8080/api/v1/auth/register``
@@ -116,7 +116,7 @@ tokiu atveju numatytasis registruojamo naudotojo vaidmuo bus "USER".
 
 Visi galimi vaidmenų(*rolių*) variantai: `USER`, `MANAGER`, `ADMIN`
 
-#### prisijungimas
+#### Prisijungimas
 Prisijungimui reikia tik dviejų laukų.
 - Nustatyti *HTTP* užklausą į ``POST``
 - Nustatyti adresą ``localhost:8080/api/v1/auth/login``
@@ -130,7 +130,7 @@ Prisijungimui reikia tik dviejų laukų.
 Sėkmingai patvirtinus autentiškumą, gausite ***JWT prieigos žetoną***(refresh token),
 naudotojo ***role*** ir ***HttpOnly atnaujinimo žetono slapuką***(HttpOnly refresh token cookie).
 
-#### atsijungimas
+#### Atsijungimas
 Atsijungimas yra paprastas procesas:
 
 - Turėkite galiojantį ``HttpOnly JWT refresh token'ą``.
@@ -141,7 +141,7 @@ Atsijungimas yra paprastas procesas:
 Atsijungimo API leidžia naudotojams nutraukti sesiją ir panaikinti prieigos žetoną (*access token*), jei jis yra.
 Tai užkerta kelią abiejų žetonų naudojimui tolesnėms autorizacijos užklausoms.
 
-#### refresh tokenas
+#### Refresh tokenas
 Prieigos žetono (*access token*) atnaujinimas yra žetonais pagrįsto autentifikavimo srauto dalis.
 JWT prieigos žetonas veikia trumpai, todėl jį reikia atnaujinti naudojant ***atnaujinimo žetono***(refresh token):
 
