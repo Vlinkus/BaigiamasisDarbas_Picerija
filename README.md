@@ -41,22 +41,22 @@ saugiam bendravimui tarp front'o ir back'o.
 
 Stack'as panaudotas šiame REST serveryje:
 - **Java 17**
-- **Spring Framework Stack:**
+- **Spring Framework Stack'as:**
     - Spring Boot 3.1.2
     - Spring Boot Data JPA
     - Spring Boot Web
     - Spring Boot Security
     - Spring Boot Validation
     - Spring Boot Test
-- **Database:**
+- **Doumenų bazė:**
     - MySQL
-- **API Documentation Stack:**
+- **API Dokumentacijos Stack'as:**
     - Swagger UI 3
     - OpenAPI 3
-- **Other Libraries:**
-    - Lombok *(for generating boilerplate code)*
-    - Mockito *(for testing)*
-    - Spring Security Test *(for security-related testing)*
+- **Kitos išorinės bibliotekos:**
+    - Lombok *(šabloniniam kodui generuoti)*
+    - Mockito *(testaviui)*
+    - Spring Security Test *(skirtas su saugumu susijusiems testavimams)*
 
 # Serverio paleidimas
 
