@@ -33,8 +33,8 @@ public class OrderService {
 		return order;
 	}
 
-	public Order save(Order theOrder){
-		if (theOrder == null || theOrder.getPizzas()== null)
+	public Order save(Order theOrder) {
+		if (theOrder == null || theOrder.getPizzas() == null)
 			throw new NullCanNotBeSavedException("Empty Order cannot be saved, add something");
 		if (theOrder.getId() != null) {
 			Order order = orderRepository.findById(theOrder.getId()).orElse(null);
@@ -44,7 +44,7 @@ public class OrderService {
 		List<Pizza> checkedPizzas = checkIfPizzasExist(theOrder.getPizzas());
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 		theOrder.setPizzas(checkedPizzas);
-		theOrder.setPrice(Math.floor(totalPrice*100)/100);
+		theOrder.setPrice(Math.floor(totalPrice * 100) / 100);
 		return orderRepository.save(theOrder);
 	}
 
@@ -56,12 +56,12 @@ public class OrderService {
 		List<Pizza> checkedPizzas = checkIfPizzasExist(theOrder.getPizzas());
 		double totalPrice = calculateOrderPrice(checkedPizzas);
 		existingOrder.setPizzas(checkedPizzas);
-		existingOrder.setPrice(Math.floor(totalPrice*100)/100);
+		existingOrder.setPrice(Math.floor(totalPrice * 100) / 100);
 		return orderRepository.save(existingOrder);
 	}
 
 	public String deleteOrder(int orderId) {
-		Order order = findOrderByIdOrThrowException(orderId); 
+		Order order = findOrderByIdOrThrowException(orderId);
 		orderRepository.delete(order);
 		return "Order Deleted Succesfully";
 	}
@@ -75,8 +75,8 @@ public class OrderService {
 		List<Pizza> pizzasFromDB = pizzaRepository.findAll();
 		List<Pizza> pizzasInCurrentOrder = new ArrayList<>();
 		for (Pizza p : pizzas) {
-			Pizza checkedPizza = pizzasFromDB.stream().filter(pizzaDB -> pizzaDB.getPizzaName().equals(p.getPizzaName()))
-					.findFirst().orElse(null);
+			Pizza checkedPizza = pizzasFromDB.stream()
+					.filter(pizzaDB -> pizzaDB.getPizzaName().equals(p.getPizzaName())).findFirst().orElse(null);
 			if (checkedPizza != null) {
 				pizzasInCurrentOrder.add(checkedPizza);
 			} else {
@@ -85,23 +85,16 @@ public class OrderService {
 		}
 		return pizzasInCurrentOrder;
 	}
-	
+
 	private Order findOrderByIdOrThrowException(Integer orderId) {
 		Order order = orderRepository.findById(orderId)
 				.orElseThrow(() -> new OrderDoesNotExistException("Order with ID: " + orderId + " was not found"));
 		return order;
 	}
-	
-	
 
-	    private void updateOrderPrice(Order order) {
-	        double totalPrice = calculateOrderPrice(order.getPizzas());
-	        order.setPrice(Math.floor(totalPrice * 100) / 100);
-	    }
-
-	    
+	private void updateOrderPrice(Order order) {
+		double totalPrice = calculateOrderPrice(order.getPizzas());
+		order.setPrice(Math.floor(totalPrice * 100) / 100);
 	}
 
-
-	
-
+}

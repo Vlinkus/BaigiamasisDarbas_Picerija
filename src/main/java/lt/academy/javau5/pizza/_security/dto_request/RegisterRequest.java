@@ -1,11 +1,22 @@
 package lt.academy.javau5.pizza._security.dto_request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lt.academy.javau5.pizza._security.entities.Role;
+
+/**
+ * DTO representing the registration
+ * request containing user details and
+ * validation criterias.
+ * @since 1.0, 15 Aug 2023
+ * @version 1.0, 4 Aug 2023
+ * @author Maksim Pavlenko
+ */
 
 @Data
 @Builder

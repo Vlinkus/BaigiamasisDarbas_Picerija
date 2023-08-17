@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO representing an {@link #error} response
- * with HTTP {@link #status} code and error message.
+ * DTO representing a response containing
+ * one simple message.
  * @version 1.0, 15 Aug 2023
- * @since 1.0, 4 Aug 2023
+ * @since 1.0, 9 Aug 2023
  * @author Maksim Pavlenko
  */
 
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse implements AbstractResponse {
-    private Integer status; // http status code
-    private String error; // error message
+public class MsgResponse implements AbstractResponse {
+    private String msg;
 }

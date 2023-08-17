@@ -39,9 +39,6 @@ public class Order {
 	@Column(name = "pizza_orders_price")
 	private double price;
 	
-//	ToDo
-//	User ManyToMany relationship
-	
 	public Order(List<Pizza> pizzas, double price) {
 		this.pizzas = pizzas;
 		this.price = price;

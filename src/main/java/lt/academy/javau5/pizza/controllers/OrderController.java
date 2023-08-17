@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lt.academy.javau5.pizza.entities.Order;
-import lt.academy.javau5.pizza.exceptions.OrderDoesNotExistException;
-import lt.academy.javau5.pizza.exceptions.PizzaDoesNotExistException;
 import lt.academy.javau5.pizza.entities.OrderResponseEntity;
+import lt.academy.javau5.pizza.exceptions.OrderDoesNotExistException;
 import lt.academy.javau5.pizza.services.OrderService;
 
 @RestController
