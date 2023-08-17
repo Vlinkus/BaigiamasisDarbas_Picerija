@@ -49,7 +49,7 @@ public class ProductService {
 		//Checks if product with this productId exist in DB if not, throw exception 
 		Product product = findProductByIdOrThrowException(productId);
 		//Checks if product is associated with any pizza. If it is, throw exception
-		if(product.getPizzas()!= null || !product.getPizzas().isEmpty())
+		if(product.getPizzas()!= null && !product.getPizzas().isEmpty())
 			throw new ProductIsStillUsedInSomePizzaException("Product with ID: " + productId + " is associated with other entities and cannot be deleted");
 			productRepository.delete(product);
 			return "Product Deleted Succesfully";		

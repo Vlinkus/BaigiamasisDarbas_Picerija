@@ -25,10 +25,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lt.academy.javau5.pizza._security.configuration.JwtService;
 import lt.academy.javau5.pizza._security.entities.Role;
+import lt.academy.javau5.pizza._security.repositories.TokenRepository;
+import lt.academy.javau5.pizza._security.services.JwtService;
 import lt.academy.javau5.pizza._security.services.UserService;
-import lt.academy.javau5.pizza._security.tokens.TokenRepository;
 import lt.academy.javau5.pizza.entities.Product;
 import lt.academy.javau5.pizza.repositories.ProductRepository;
 import lt.academy.javau5.pizza.services.ProductService;

@@ -6,10 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
->>>>>>> main
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -106,7 +103,6 @@ public class ProductServiceTests {
 	}
 
 	@Test
-<<<<<<< HEAD
 	public void testDeleteProductFromRepoWhenPizzaListIsEmpty() {
 		// Arrange
 		int id = 1;
@@ -123,9 +119,6 @@ public class ProductServiceTests {
 	
 	@Test
 	public void testTrySaveProductWithExistingName(){
-=======
-	public void testTrySaveProductWithExistingName() {
->>>>>>> main
 		// Arrange
 		String productName = "Agurkai";
 		Product product = new Product(1, productName, 10.0, null);
