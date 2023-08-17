@@ -1,4 +1,4 @@
-# Pizzeria - REST Server
+# Pizzeria - BACK Dalis
 <i>Atkreipkite dėmesį, kad projektas, kuriame tai skaitote, yra tik galinė dalis!
 jums taip pat reikės front-end dalies. Nuoroda pateikta po šią pastabą ↓</i><br/>
 <a href="https://github.com/Vlinkus/BaigiamasisDarbas_PicerijaFront">Frontas</a>
@@ -50,6 +50,7 @@ Stack'as panaudotas šiame REST serveryje:
     - Spring Boot Test
 - **Doumenų bazė:**
     - MySQL
+    - H2 *(testavimui)*
 - **API Dokumentacijos Stack'as:**
     - Swagger UI 3
     - OpenAPI 3
