@@ -61,11 +61,7 @@ public class ProductController {
 	// Update product
 	@PutMapping("/product")
 	public ResponseEntity<String> updateProduct(@RequestBody Product product) {
-		try {
 			productService.update(product);
 			return ResponseEntity.ok("Product updated successfully.");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
-		}
 	}
 }

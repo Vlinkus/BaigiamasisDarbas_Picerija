@@ -1,4 +1,4 @@
-# Pizzeria - REST Server
+# Pizzeria - BACK Dalis
 <i>Atkreipkite dėmesį, kad projektas, kuriame tai skaitote, yra tik galinė dalis!
 jums taip pat reikės front-end dalies. Nuoroda pateikta po šią pastabą ↓</i><br/>
 <a href="https://github.com/Vlinkus/BaigiamasisDarbas_PicerijaFront">Frontas</a>
