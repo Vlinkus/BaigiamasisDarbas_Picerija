@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -102,7 +103,22 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void testTrySaveProductWithExistingName() {
+	public void testDeleteProductFromRepoWhenPizzaListIsEmpty() {
+		// Arrange
+		int id = 1;
+		List<Pizza> pizzas = new ArrayList<>();
+		Optional<Product> product = Optional.of( new Product(1, "Agurkai", 10.0, pizzas));
+		Product prod =product.get();
+		when(repo.findById(id)).thenReturn(product);
+		// Act
+		String result = service.delete(id);
+		// Assert
+		Assertions.assertEquals("Product Deleted Succesfully",result);
+		verify(repo).delete(prod);
+	}
+	
+	@Test
+	public void testTrySaveProductWithExistingName(){
 		// Arrange
 		String productName = "Agurkai";
 		Product product = new Product(1, productName, 10.0, null);
