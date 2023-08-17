@@ -65,10 +65,30 @@ public class PizzeriaCustomExceptionHandler extends ResponseEntityExceptionHandl
 
 	@ExceptionHandler(NullCanNotBeSavedException.class)
 	public ResponseEntity<Object> handlePizzaNullCanNotBeSavedException(Exception ex, WebRequest request) {
-		exceptionHandlerLogger.error("ProductIsStillUsedInSomePizzaException occurred: " + ex.getMessage());
+		exceptionHandlerLogger.error("NullCanNotBeSavedException occurred: " + ex.getMessage());
 		String message = ex.getMessage();
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		PizzeriaErrorResponse errorResponse = new PizzeriaErrorResponse(message, status.value());
 		return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
 	}
+	
+	@ExceptionHandler(OrderDoesNotExistException.class)
+	public ResponseEntity<Object> handleOrderDoesNotExistException(Exception ex, WebRequest request) {
+		exceptionHandlerLogger.error("OrderDoesNotExistException occurred: " + ex.getMessage());
+		String message = ex.getMessage();
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		PizzeriaErrorResponse errorResponse = new PizzeriaErrorResponse(message, status.value());
+		return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(OrderAlreadyExistsException.class)
+	public ResponseEntity<Object> handleOrderAlreadyExistsException(Exception ex, WebRequest request) {
+		exceptionHandlerLogger.error("OrderAlreadyExistsException occurred: " + ex.getMessage());
+		String message = ex.getMessage();
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		PizzeriaErrorResponse errorResponse = new PizzeriaErrorResponse(message, status.value());
+		return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+	}
+	
+	
 }
