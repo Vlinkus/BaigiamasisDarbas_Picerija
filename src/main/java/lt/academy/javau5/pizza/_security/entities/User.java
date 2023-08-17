@@ -45,7 +45,7 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, unique = true)
-	private Integer id;
+	private Long id;
 	/**
 	 * The first name of the user.
 	 */

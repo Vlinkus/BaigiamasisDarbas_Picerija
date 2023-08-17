@@ -66,5 +66,5 @@ public class TokenService {
      * @return The list of valid tokens associated with the user.
      */
 
-    public List<Token> findAllValidTokenByUser(Integer id) {return repo.findAllValidTokenByUser(id); }
+    public List<Token> findAllValidTokenByUser(Long id) {return repo.findAllValidTokenByUser(id); }
 }
