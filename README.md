@@ -50,6 +50,7 @@ Stack'as panaudotas šiame REST serveryje:
     - Spring Boot Test
 - **Doumenų bazė:**
     - MySQL
+    - H2 *(testavimui)*
 - **API Dokumentacijos Stack'as:**
     - Swagger UI 3
     - OpenAPI 3
