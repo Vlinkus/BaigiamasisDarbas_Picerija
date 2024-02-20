@@ -1,4 +1,4 @@
-//package lt.academy.javau5.pizza;
+package lt.academy.javau5.pizza;//package lt.academy.javau5.pizza;
 //
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

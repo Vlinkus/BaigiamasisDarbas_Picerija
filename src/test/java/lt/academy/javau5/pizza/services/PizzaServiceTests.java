@@ -146,7 +146,7 @@ public class PizzaServiceTests {
 		// Arrange
 		int pizzaId = 1;
 		Pizza pizzaToUpdate = new Pizza(pizzaId, "Margarita", null, 10.0, 20, null, null);
-		when(repo.findById(pizzaId)).thenReturn(java.util.Optional.empty());
+		when(repo.findById(pizzaId)).thenReturn(Optional.empty());
 		// Act and Assert
 		PizzaDoesNotExistException exception = Assertions.assertThrows(PizzaDoesNotExistException.class, () -> {
 			service.update(pizzaToUpdate);
@@ -227,7 +227,7 @@ public class PizzaServiceTests {
         int pizzaId = 1;
         String pizzaName = "Existing Pizza";
         Pizza existingPizza = new Pizza(1, pizzaName, null, 10.0, 20, null, null);
-        when(repo.findPizzaByPizzaName(pizzaName)).thenReturn(java.util.Optional.of(existingPizza));
+        when(repo.findPizzaByPizzaName(pizzaName)).thenReturn(Optional.of(existingPizza));
         // Act
         Pizza updatedPizza = new Pizza(pizzaId + 1, pizzaName, null, 12.0, 25, null, null);
         // Assert
@@ -243,7 +243,7 @@ public class PizzaServiceTests {
         // Arrange
         String pizzaName = "Kapri";
         Pizza existingPizza = new Pizza(1, pizzaName, null, 10.0, 20, null, null);
-        when(repo.findPizzaByPizzaName(pizzaName)).thenReturn(java.util.Optional.of(existingPizza));
+        when(repo.findPizzaByPizzaName(pizzaName)).thenReturn(Optional.of(existingPizza));
         // Act
         Pizza newPizza = new Pizza(2, pizzaName, null, 12.0, 25, null, null);
         // Assert
@@ -259,7 +259,7 @@ public class PizzaServiceTests {
         // Arrange
         int id = 1;
         Pizza existingPizza = new Pizza(id, "Kapri", null, 10.0, 20, null, null);
-        when(repo.findById(id)).thenReturn(java.util.Optional.of(existingPizza));
+        when(repo.findById(id)).thenReturn(Optional.of(existingPizza));
         // Act
         Pizza newPizza = new Pizza(id, "Margarita", null, 12.0, 25, null, null);
         // Assert
