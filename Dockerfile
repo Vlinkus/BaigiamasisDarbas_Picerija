@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY src ./src
+COPY update_prop.sh .
 
 ENV CONFIG_LINK=/app/src/main/resources/application.yaml
 
