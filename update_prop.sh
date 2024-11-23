@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Define the file path
 APPLICATION_PROPERTIES="./src/main/resources/application.properties"
