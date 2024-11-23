@@ -26,7 +26,17 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")// Adjust the mapping as needed
-                .allowedOrigins("http://localhost:3000") // Allow requests from this origin
+                .allowedOrigins(
+                        "https://pizzeria.pavlenkomaksim.com",
+                        "https://pizzeria.rimuok.lt",
+                        "https://www.pizzeria.rimuok.lt",
+                        "http://pizzeria.rimuok.lt",
+                        "http://www.pizzeria.rimuok.lt",
+                        "http://localhost:3000",
+                        "http://localhost:3003",
+                        "http://192.168.10.127:3000",
+                        "http://192.168.10.127:3003"
+                        ) // Allow requests from this origin
                 .allowedMethods("*") // Allow specific HTTP methods
                 .allowedHeaders("*")
                 .allowCredentials(true); // Allow cookies and controllers headers
