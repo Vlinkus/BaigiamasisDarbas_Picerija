@@ -1,7 +1,7 @@
-#!/bin/sh
-ser -x
+#!/bin/bash
+
 # Define the file path
-APPLICATION_PROPERTIES="./src/main/resources/application.properties"
+APPLICATION_PROPERTIES="src/main/resources/application.properties"
 
 # Check if the file exists
 if [[ -f "$PACKAGE_JSON" ]]; then
