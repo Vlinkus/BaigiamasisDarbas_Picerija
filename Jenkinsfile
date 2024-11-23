@@ -8,6 +8,9 @@ pipeline {
           if docker ps -a | grep -q pizzeria-back; then
             docker stop pizzeria-back || true
             docker rm pizzeria-back || true
+            if docker images | grep -q pizzeria-back; then
+              docker rmi -f pizzeria-back || true
+            fi
           fi
         """
 
