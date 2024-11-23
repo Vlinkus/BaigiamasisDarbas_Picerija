@@ -8,9 +8,9 @@ COPY update_prop.sh .
 
 ENV CONFIG_LINK=/app/src/main/resources/application.yaml
 
-RUN chmod +x update_prop.sh && \
-    ./update_prop.sh && \
-    mvn clean package -DskipTests
+RUN chmod 777 update_prop.sh
+RUN sh update_prop.sh
+RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-noble AS prod
 
