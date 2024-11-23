@@ -1,5 +1,5 @@
 *
 !src/
 !pom.xml
-!updateprop.sh
+!update_prop.sh
 target/
