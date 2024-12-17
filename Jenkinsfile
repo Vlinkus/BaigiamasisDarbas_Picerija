@@ -23,7 +23,7 @@ pipeline {
     stage('Deploy') {
       steps {
         sh """
-          docker run -d --name pizzeria-back -p 8084:8080 pizzeria-back
+          docker run -d --name pizzeria-back -p 8084:8080 --restart=always pizzeria-back
         """
       }
     }
